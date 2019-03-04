@@ -25,6 +25,7 @@
 		6B308F272222F2B800E36DA7 /* PlaceholderTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B308F252222F2B800E36DA7 /* PlaceholderTextView.swift */; };
 		6B308F282222F2B800E36DA7 /* PlaceholderTextView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6B308F262222F2B800E36DA7 /* PlaceholderTextView.xib */; };
 		6B424F22222D7F5900CE1A23 /* UIView+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B424F21222D7F5900CE1A23 /* UIView+.swift */; };
+		6B424F25222D846100CE1A23 /* TextInputFieldConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B424F24222D846100CE1A23 /* TextInputFieldConfiguration.swift */; };
 		6BBE9DBA2227FEB200CE8433 /* CustomEdgeInsetsLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BBE9DB92227FEB200CE8433 /* CustomEdgeInsetsLabel.swift */; };
 /* End PBXBuildFile section */
 
@@ -81,6 +82,7 @@
 		6B308F252222F2B800E36DA7 /* PlaceholderTextView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaceholderTextView.swift; sourceTree = "<group>"; };
 		6B308F262222F2B800E36DA7 /* PlaceholderTextView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PlaceholderTextView.xib; sourceTree = "<group>"; };
 		6B424F21222D7F5900CE1A23 /* UIView+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+.swift"; sourceTree = "<group>"; };
+		6B424F24222D846100CE1A23 /* TextInputFieldConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextInputFieldConfiguration.swift; sourceTree = "<group>"; };
 		6BBE9DB92227FEB200CE8433 /* CustomEdgeInsetsLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomEdgeInsetsLabel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -134,8 +136,9 @@
 		6B308EE62222EBBD00E36DA7 /* FormKit */ = {
 			isa = PBXGroup;
 			children = (
-				6B424F20222D7F4B00CE1A23 /* Util */,
+				6B424F23222D841A00CE1A23 /* Form */,
 				6B308F212222ECBA00E36DA7 /* Parts */,
+				6B424F20222D7F4B00CE1A23 /* Util */,
 				6B308EE72222EBBD00E36DA7 /* FormKit.h */,
 				6B308EE82222EBBD00E36DA7 /* Info.plist */,
 				6B308F192222EBF200E36DA7 /* FormViewController.swift */,
@@ -171,7 +174,6 @@
 			children = (
 				6BBE9DB82227FEA700CE8433 /* CustomEdgeInsetsLabel */,
 				6B308F292222F2BE00E36DA7 /* PlaceholderTextView */,
-				6B308F242222F2A700E36DA7 /* TextInputField */,
 			);
 			path = Parts;
 			sourceTree = "<group>";
@@ -181,6 +183,7 @@
 			children = (
 				6B308F1F2222ECB400E36DA7 /* TextInputField.swift */,
 				6B308F222222ECCB00E36DA7 /* TextInputField.xib */,
+				6B424F24222D846100CE1A23 /* TextInputFieldConfiguration.swift */,
 			);
 			path = TextInputField;
 			sourceTree = "<group>";
@@ -201,6 +204,14 @@
 				6B424F21222D7F5900CE1A23 /* UIView+.swift */,
 			);
 			path = Util;
+			sourceTree = "<group>";
+		};
+		6B424F23222D841A00CE1A23 /* Form */ = {
+			isa = PBXGroup;
+			children = (
+				6B308F242222F2A700E36DA7 /* TextInputField */,
+			);
+			path = Form;
 			sourceTree = "<group>";
 		};
 		6BBE9DB82227FEA700CE8433 /* CustomEdgeInsetsLabel */ = {
@@ -358,6 +369,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				6B424F22222D7F5900CE1A23 /* UIView+.swift in Sources */,
+				6B424F25222D846100CE1A23 /* TextInputFieldConfiguration.swift in Sources */,
 				6B308F1B2222EBF200E36DA7 /* FormViewController.swift in Sources */,
 				6B308F202222ECB400E36DA7 /* TextInputField.swift in Sources */,
 				6B308F1E2222EC5400E36DA7 /* XibInitializable.swift in Sources */,
