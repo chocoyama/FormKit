@@ -60,6 +60,14 @@ public class TextInputField: UIView, XibInitializable {
         didSet { titleLabel.textColor = titleColor }
     }
     
+    @IBInspectable var onlyNumbers: Bool = false {
+        didSet {
+            if onlyNumbers {
+                placeholderTextView.textView.keyboardType = .numberPad
+            }
+        }
+    }
+    
     @IBInspectable var inputFieldText: String = "" {
         didSet { placeholderTextView.setText(inputFieldText) }
     }
@@ -126,6 +134,10 @@ public class TextInputField: UIView, XibInitializable {
     override public init(frame: CGRect) {
         super.init(frame: frame)
         setXibView()
+    }
+    
+    public override func awakeFromNib() {
+        super.awakeFromNib()
     }
 }
 
