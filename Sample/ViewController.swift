@@ -10,22 +10,58 @@ import UIKit
 import FormKit
 
 class ViewController: UIViewController {
-    @IBOutlet weak var textInputField1: TextInputField!
-    @IBOutlet weak var textInputField2: TextInputField!
+    @IBOutlet weak var lastNameInputField: TextInputField!
+    @IBOutlet weak var firstNameInputField: TextInputField!
+    @IBOutlet weak var addressInputField: TextInputField!
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        configureTextField1()
-        configureTextField2()
+        configureLastNameInputField()
+        configureFirstNameInputField()
+        configureAddressInputField()
     }
     
-    private func configureTextField1() {
+    private func configureLastNameInputField() {
         var configuration = TextInputField.Configuration()
-        configuration.layout.axis = .horizontal
-        textInputField1.configure(with: configuration)
+        
+        // layout
+        configuration.layout.margin = UIEdgeInsets(top: 8.0, left: 8.0, bottom: 8.0, right: 8.0)
+        configuration.layout.spacing = 4.0
+        
+        // title
+        configuration.title.value = "お名前"
+        
+        // inputField
+        configuration.inputField.placeholder = "姓"
+        configuration.inputField.border = (color: UIColor(white: 0.3, alpha: 0.4), width: 1.0)
+        
+        // validation
+        configuration.validation.maxInputCount = nil
+        
+        lastNameInputField.configure(with: configuration)
     }
     
-    private func configureTextField2() {
+    private func configureFirstNameInputField() {
+        var configuration = TextInputField.Configuration()
+        
+        // layout
+        configuration.layout.margin = UIEdgeInsets(top: 8.0, left: 8.0, bottom: 8.0, right: 8.0)
+        configuration.layout.spacing = 4.0
+        
+        // title
+        configuration.title.value = " "
+        
+        // inputField
+        configuration.inputField.placeholder = "名"
+        configuration.inputField.border = (color: UIColor(white: 0.3, alpha: 0.4), width: 1.0)
+        
+        // validation
+        configuration.validation.maxInputCount = nil
+        
+        firstNameInputField.configure(with: configuration)
+    }
+    
+    private func configureAddressInputField() {
         var configuration = TextInputField.Configuration()
         
         // layout
@@ -34,13 +70,16 @@ class ViewController: UIViewController {
         configuration.layout.spacing = 4.0
         
         // title
-        configuration.title.value = "住所"
+        configuration.title.value = "ご住所"
         
         // inputField
         configuration.inputField.placeholder = "〒101-0001"
         configuration.inputField.border = (color: UIColor(white: 0.3, alpha: 0.4), width: 1.0)
         
-        textInputField2.configure(with: configuration)
+        // validation
+        configuration.validation.maxInputCount = nil
+        
+        addressInputField.configure(with: configuration)
     }
 }
 

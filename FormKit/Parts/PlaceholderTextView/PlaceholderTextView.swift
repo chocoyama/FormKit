@@ -8,6 +8,11 @@
 
 import UIKit
 
+public protocol PlaceholderTextViewDelegate: class {
+    func placeholderTextView(_ placeholderTextView: PlaceholderTextView, didChangeWith text: String?)
+    func placeholderTextView(_ placeholderTextView: PlaceholderTextView, didEndEditingWith text: String?)
+}
+
 public class PlaceholderTextView: UIView, XibInitializable {
 
     public struct Configuration {
@@ -26,6 +31,8 @@ public class PlaceholderTextView: UIView, XibInitializable {
         }
     }
     @IBOutlet weak var placeholderLabel: UILabel!
+    
+    public weak var delegate: PlaceholderTextViewDelegate?
     
     required public init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
@@ -62,10 +69,12 @@ public class PlaceholderTextView: UIView, XibInitializable {
 extension PlaceholderTextView: UITextViewDelegate {
     public func textViewDidChange(_ textView: UITextView) {
         togglePlaceholder()
+        delegate?.placeholderTextView(self, didChangeWith: textView.text)
     }
     
     public func textViewDidEndEditing(_ textView: UITextView) {
         togglePlaceholder()
+        delegate?.placeholderTextView(self, didEndEditingWith: textView.text)
     }
     
     private func togglePlaceholder() {

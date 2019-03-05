@@ -8,12 +8,21 @@
 
 import UIKit
 
+public protocol TextInputFieldDelegate: class {
+    func textInputField(_ textInputField: TextInputField, didChangeWith text: String?)
+    func textInputField(_ textInputField: TextInputField, didEndEditingWith text: String?)
+}
+
 public class TextInputField: UIView, XibInitializable {
     
     @IBOutlet weak var outsideStackView: UIStackView!
     @IBOutlet weak var stackView: UIStackView!
     @IBOutlet weak var titleLabel: UILabel!
-    @IBOutlet weak var placeholderTextView: PlaceholderTextView!
+    @IBOutlet weak var placeholderTextView: PlaceholderTextView! {
+        didSet {
+            placeholderTextView.delegate = self
+        }
+    }
     @IBOutlet weak var inputLimitLabel: UILabel!
     
     @IBOutlet weak var marginTopConstraint: NSLayoutConstraint!
@@ -22,6 +31,8 @@ public class TextInputField: UIView, XibInitializable {
     @IBOutlet weak var marginBottomConstraint: NSLayoutConstraint!
     
     private var configuration: Configuration?
+    
+    public weak var delegate: TextInputFieldDelegate?
     
     required public init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
@@ -83,6 +94,16 @@ public class TextInputField: UIView, XibInitializable {
         } else {
             inputLimitLabel.isHidden = true
         }
+    }
+}
+
+extension TextInputField: PlaceholderTextViewDelegate {
+    public func placeholderTextView(_ placeholderTextView: PlaceholderTextView, didChangeWith text: String?) {
+        delegate?.textInputField(self, didChangeWith: text)
+    }
+    
+    public func placeholderTextView(_ placeholderTextView: PlaceholderTextView, didEndEditingWith text: String?) {
+        delegate?.textInputField(self, didEndEditingWith: text)
     }
 }
 

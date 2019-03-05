@@ -21,10 +21,19 @@
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="Pkg-H1-q6t">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="200"/>
                                 <subviews>
-                                    <view contentMode="scaleToFill" placeholderIntrinsicWidth="infinite" placeholderIntrinsicHeight="100" translatesAutoresizingMaskIntoConstraints="NO" id="ah6-V3-vsQ" customClass="TextInputField" customModule="FormKit">
+                                    <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="Hvn-n8-OUU">
                                         <rect key="frame" x="0.0" y="0.0" width="375" height="100"/>
-                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                    </view>
+                                        <subviews>
+                                            <view contentMode="scaleToFill" placeholderIntrinsicWidth="infinite" placeholderIntrinsicHeight="100" translatesAutoresizingMaskIntoConstraints="NO" id="ah6-V3-vsQ" customClass="TextInputField" customModule="FormKit">
+                                                <rect key="frame" x="0.0" y="0.0" width="187.5" height="100"/>
+                                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                            </view>
+                                            <view contentMode="scaleToFill" placeholderIntrinsicWidth="infinite" placeholderIntrinsicHeight="100" translatesAutoresizingMaskIntoConstraints="NO" id="Ylj-JC-BsE" customClass="TextInputField" customModule="FormKit">
+                                                <rect key="frame" x="187.5" y="0.0" width="187.5" height="100"/>
+                                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                            </view>
+                                        </subviews>
+                                    </stackView>
                                     <view contentMode="scaleToFill" placeholderIntrinsicWidth="infinite" placeholderIntrinsicHeight="100" translatesAutoresizingMaskIntoConstraints="NO" id="kIK-5x-5CG" customClass="TextInputField" customModule="FormKit">
                                         <rect key="frame" x="0.0" y="100" width="375" height="100"/>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -41,8 +50,9 @@
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
                     <connections>
-                        <outlet property="textInputField1" destination="ah6-V3-vsQ" id="NBC-X6-ZkX"/>
-                        <outlet property="textInputField2" destination="kIK-5x-5CG" id="gfY-Hy-6zJ"/>
+                        <outlet property="addressInputField" destination="kIK-5x-5CG" id="gfY-Hy-6zJ"/>
+                        <outlet property="firstNameInputField" destination="Ylj-JC-BsE" id="6xW-id-2n7"/>
+                        <outlet property="lastNameInputField" destination="ah6-V3-vsQ" id="NBC-X6-ZkX"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
