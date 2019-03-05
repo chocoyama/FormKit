@@ -10,6 +10,12 @@ import UIKit
 import FormKit
 
 class ViewController: UIViewController {
+    @IBOutlet weak var scrollView: UIScrollView! {
+        didSet {
+            scrollView.alwaysBounceVertical = true
+        }
+    }
+    
     @IBOutlet weak var lastNameInputField: TextInputField!
     @IBOutlet weak var firstNameInputField: TextInputField!
     @IBOutlet weak var addressInputField: TextInputField!
@@ -25,7 +31,7 @@ class ViewController: UIViewController {
         var configuration = TextInputField.Configuration()
         
         // layout
-        configuration.layout.margin = UIEdgeInsets(top: 8.0, left: 8.0, bottom: 8.0, right: 8.0)
+//        configuration.layout.margin = UIEdgeInsets(top: 8.0, left: 8.0, bottom: 8.0, right: 8.0)
         configuration.layout.spacing = 4.0
         
         // title
@@ -45,7 +51,7 @@ class ViewController: UIViewController {
         var configuration = TextInputField.Configuration()
         
         // layout
-        configuration.layout.margin = UIEdgeInsets(top: 8.0, left: 8.0, bottom: 8.0, right: 8.0)
+//        configuration.layout.margin = UIEdgeInsets(top: 8.0, left: 8.0, bottom: 8.0, right: 8.0)
         configuration.layout.spacing = 4.0
         
         // title
@@ -66,7 +72,7 @@ class ViewController: UIViewController {
         
         // layout
         configuration.layout.axis = .vertical
-        configuration.layout.margin = UIEdgeInsets(top: 8.0, left: 8.0, bottom: 8.0, right: 8.0)
+//        configuration.layout.margin = UIEdgeInsets(top: 8.0, left: 8.0, bottom: 8.0, right: 8.0)
         configuration.layout.spacing = 4.0
         
         // title
