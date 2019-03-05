@@ -19,7 +19,7 @@ extension TextInputField {
         }
         
         public struct Title {
-            public var value: String? = "Title"
+            public var value: String?
             public var font: UIFont = .systemFont(ofSize: 17)
             public var color: UIColor = .black
             
@@ -51,7 +51,7 @@ extension TextInputField {
             
             public var check: ((InputValue) -> ValidateResult)?
             public var timing: Timing = .didEndEditing
-            public var maxInputCount: Int? = 100
+            public var maxInputCount: Int?
             
             public init() {}
         }
