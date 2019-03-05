@@ -15,6 +15,92 @@ public protocol TextInputFieldDelegate: class {
 
 public class TextInputField: UIView, XibInitializable {
     
+    @IBInspectable var horizontal: Bool = false {
+        didSet {
+            stackView.axis = horizontal ? .horizontal : .vertical
+            switch stackView.axis {
+            case .horizontal: stackView.alignment = .top
+            case .vertical: stackView.alignment = .fill
+            }
+        }
+    }
+    
+    @IBInspectable var spacing: CGFloat = 0.0 {
+        didSet {
+            outsideStackView.spacing = spacing
+            stackView.spacing = spacing
+        }
+    }
+    
+    @IBInspectable var margin: CGFloat = 0.0 {
+        didSet {
+            marginTopConstraint.constant = margin
+            marginLeftConstraint.constant = margin
+            marginRightConstraint.constant = -margin
+            marginBottomConstraint.constant = -margin
+        }
+    }
+    
+    @IBInspectable var title: String? = nil {
+        didSet {
+            if let title = title {
+                titleLabel.isHidden = false
+                titleLabel.text = title
+            } else {
+                titleLabel.isHidden = true
+            }
+        }
+    }
+    
+    @IBInspectable var titleFont: UIFont = .systemFont(ofSize: 17) {
+        didSet { titleLabel.font = titleFont }
+    }
+    
+    @IBInspectable var titleColor: UIColor = .black {
+        didSet { titleLabel.textColor = titleColor }
+    }
+    
+    @IBInspectable var inputFieldText: String = "" {
+        didSet { placeholderTextView.setText(inputFieldText) }
+    }
+    
+    @IBInspectable var inputFieldPlaceholder: String = "" {
+        didSet { placeholderTextView.setPlaceholder(inputFieldPlaceholder) }
+    }
+    
+    @IBInspectable var inputFieldTextFont: UIFont = .systemFont(ofSize: 17) {
+        didSet { placeholderTextView.setFont(inputFieldTextFont) }
+    }
+    
+    @IBInspectable var inputFieldTextColor: UIColor = .black {
+        didSet { placeholderTextView.setColor(inputFieldTextColor) }
+    }
+    
+    @IBInspectable var inputFieldBorderColor: UIColor = .clear {
+        didSet {
+            let border = (color: inputFieldBorderColor, width: inputFieldBorderWidth)
+            placeholderTextView.setBorder(border)
+        }
+    }
+    
+    @IBInspectable var inputFieldBorderWidth: CGFloat = 0.0 {
+        didSet {
+            let border = (color: inputFieldBorderColor, width: inputFieldBorderWidth)
+            placeholderTextView.setBorder(border)
+        }
+    }
+    
+    @IBInspectable var maxInputCount: Int = 0 {
+        didSet {
+            if maxInputCount == 0 {
+                inputLimitLabel.isHidden = true
+            } else {
+                inputLimitLabel.isHidden = false
+                inputLimitLabel.text = "\(maxInputCount)"
+            }
+        }
+    }
+    
     @IBOutlet weak var outsideStackView: UIStackView!
     @IBOutlet weak var stackView: UIStackView!
     @IBOutlet weak var titleLabel: UILabel!
@@ -30,8 +116,6 @@ public class TextInputField: UIView, XibInitializable {
     @IBOutlet weak var marginLeftConstraint: NSLayoutConstraint!
     @IBOutlet weak var marginBottomConstraint: NSLayoutConstraint!
     
-    private var configuration: Configuration?
-    
     public weak var delegate: TextInputFieldDelegate?
     
     required public init?(coder aDecoder: NSCoder) {
@@ -43,58 +127,6 @@ public class TextInputField: UIView, XibInitializable {
         super.init(frame: frame)
         setXibView()
     }
-
-    @discardableResult
-    public func configure(with configuration: Configuration) -> Self {
-        self.configuration = configuration
-        configure(configuration.layout)
-        configure(configuration.title)
-        configure(configuration.inputField)
-        configure(configuration.validation)
-        return self
-    }
-    
-    private func configure(_ layout: Configuration.Layout) {
-        stackView.axis = layout.axis
-        switch layout.axis {
-        case .horizontal:
-            stackView.alignment = .top
-        case .vertical:
-            stackView.alignment = .fill
-        }
-
-        outsideStackView.spacing = layout.spacing
-        stackView.spacing = layout.spacing
-        
-        marginTopConstraint.constant = layout.margin.top
-        marginLeftConstraint.constant = layout.margin.left
-        marginRightConstraint.constant = -layout.margin.right
-        marginBottomConstraint.constant = -layout.margin.bottom
-    }
-    
-    private func configure(_ title: Configuration.Title) {
-        if let titleValue = title.value {
-            titleLabel.isHidden = false
-            titleLabel.text = titleValue
-            titleLabel.font = title.font
-            titleLabel.textColor = title.color
-        } else {
-            titleLabel.isHidden = true
-        }
-    }
-    
-    private func configure(_ inputField: Configuration.InputField) {
-        placeholderTextView.configure(with: .init(inputField: inputField))
-    }
-    
-    private func configure(_ validation: Configuration.Validation) {
-        if let maxInputCount = validation.maxInputCount {
-            inputLimitLabel.isHidden = false
-            inputLimitLabel.text = "\(maxInputCount)"
-        } else {
-            inputLimitLabel.isHidden = true
-        }
-    }
 }
 
 extension TextInputField: PlaceholderTextViewDelegate {
@@ -104,15 +136,5 @@ extension TextInputField: PlaceholderTextViewDelegate {
     
     public func placeholderTextView(_ placeholderTextView: PlaceholderTextView, didEndEditingWith text: String?) {
         delegate?.textInputField(self, didEndEditingWith: text)
-    }
-}
-
-private extension PlaceholderTextView.Configuration {
-    init(inputField: TextInputField.Configuration.InputField) {
-        self.text = inputField.text
-        self.placeholder = inputField.placeholder
-        self.font = inputField.font
-        self.color = inputField.color
-        self.border = inputField.border
     }
 }

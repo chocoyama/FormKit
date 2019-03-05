@@ -83,25 +83,25 @@ extension PlaceholderTextView: UITextViewDelegate {
 }
 
 extension PlaceholderTextView {
-    private func setText(_ text: String) {
+    public func setText(_ text: String) {
         self.textView.text = text
         togglePlaceholder()
     }
     
-    private func setPlaceholder(_ placeholder: String) {
+    public func setPlaceholder(_ placeholder: String) {
         placeholderLabel.text = placeholder
     }
     
-    private func setFont(_ font: UIFont) {
+    public func setFont(_ font: UIFont) {
         textView.font = font
         placeholderLabel.font = font
     }
     
-    private func setColor(_ color: UIColor) {
+    public func setColor(_ color: UIColor) {
         textView.textColor = color
     }
     
-    private func setBorder(_ border: Configuration.Border) {
+    public func setBorder(_ border: Configuration.Border) {
         textView.drawBorder(width: border.width, color: border.color)
     }
 }

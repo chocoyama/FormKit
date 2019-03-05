@@ -42,10 +42,34 @@
                                                     <view contentMode="scaleToFill" placeholderIntrinsicWidth="infinite" placeholderIntrinsicHeight="100" translatesAutoresizingMaskIntoConstraints="NO" id="ah6-V3-vsQ" customClass="TextInputField" customModule="FormKit">
                                                         <rect key="frame" x="0.0" y="0.0" width="167.5" height="100"/>
                                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                        <userDefinedRuntimeAttributes>
+                                                            <userDefinedRuntimeAttribute type="number" keyPath="formSpacing">
+                                                                <real key="value" value="4"/>
+                                                            </userDefinedRuntimeAttribute>
+                                                            <userDefinedRuntimeAttribute type="string" keyPath="inputFieldPlaceholder" value="姓"/>
+                                                            <userDefinedRuntimeAttribute type="color" keyPath="inputFieldBorderColor">
+                                                                <color key="value" white="0.29999999999999999" alpha="0.40000000000000002" colorSpace="calibratedWhite"/>
+                                                            </userDefinedRuntimeAttribute>
+                                                            <userDefinedRuntimeAttribute type="number" keyPath="inputFieldBorderWidth">
+                                                                <real key="value" value="1"/>
+                                                            </userDefinedRuntimeAttribute>
+                                                        </userDefinedRuntimeAttributes>
                                                     </view>
                                                     <view contentMode="scaleToFill" placeholderIntrinsicWidth="infinite" placeholderIntrinsicHeight="100" translatesAutoresizingMaskIntoConstraints="NO" id="Ylj-JC-BsE" customClass="TextInputField" customModule="FormKit">
                                                         <rect key="frame" x="175.5" y="0.0" width="167.5" height="100"/>
                                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                        <userDefinedRuntimeAttributes>
+                                                            <userDefinedRuntimeAttribute type="number" keyPath="formSpacing">
+                                                                <real key="value" value="4"/>
+                                                            </userDefinedRuntimeAttribute>
+                                                            <userDefinedRuntimeAttribute type="string" keyPath="inputFieldPlaceholder" value="名"/>
+                                                            <userDefinedRuntimeAttribute type="color" keyPath="inputFieldBorderColor">
+                                                                <color key="value" white="0.29999999999999999" alpha="0.40000000000000002" colorSpace="calibratedWhite"/>
+                                                            </userDefinedRuntimeAttribute>
+                                                            <userDefinedRuntimeAttribute type="number" keyPath="inputFieldBorderWidth">
+                                                                <real key="value" value="1"/>
+                                                            </userDefinedRuntimeAttribute>
+                                                        </userDefinedRuntimeAttributes>
                                                     </view>
                                                 </subviews>
                                             </stackView>
@@ -61,6 +85,18 @@
                                                     <view contentMode="scaleToFill" placeholderIntrinsicWidth="infinite" placeholderIntrinsicHeight="100" translatesAutoresizingMaskIntoConstraints="NO" id="kIK-5x-5CG" customClass="TextInputField" customModule="FormKit">
                                                         <rect key="frame" x="0.0" y="0.0" width="255" height="128"/>
                                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                        <userDefinedRuntimeAttributes>
+                                                            <userDefinedRuntimeAttribute type="number" keyPath="formSpacing">
+                                                                <real key="value" value="4"/>
+                                                            </userDefinedRuntimeAttribute>
+                                                            <userDefinedRuntimeAttribute type="string" keyPath="inputFieldPlaceholder" value="〒101-0001"/>
+                                                            <userDefinedRuntimeAttribute type="color" keyPath="inputFieldBorderColor">
+                                                                <color key="value" white="0.29999999999999999" alpha="0.40000000000000002" colorSpace="calibratedWhite"/>
+                                                            </userDefinedRuntimeAttribute>
+                                                            <userDefinedRuntimeAttribute type="number" keyPath="inputFieldBorderWidth">
+                                                                <real key="value" value="1"/>
+                                                            </userDefinedRuntimeAttribute>
+                                                        </userDefinedRuntimeAttributes>
                                                     </view>
                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="JoC-aE-aid" customClass="SubmitButton" customModule="FormKit">
                                                         <rect key="frame" x="263" y="0.0" width="80" height="128"/>
