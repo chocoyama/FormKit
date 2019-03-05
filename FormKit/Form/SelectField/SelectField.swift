@@ -14,15 +14,15 @@ public protocol SelectedFieldDelegate: class {
 
 public class SelectField: UIView, XibInitializable {
     
-    @IBInspectable var borderColor: UIColor = .clear {
+    @IBInspectable public var borderColor: UIColor = .clear {
         didSet { drawBorder(width: borderWidth, color: borderColor) }
     }
     
-    @IBInspectable var borderWidth: CGFloat = 0.0 {
+    @IBInspectable public var borderWidth: CGFloat = 0.0 {
         didSet { drawBorder(width: borderWidth, color: borderColor) }
     }
     
-    @IBInspectable var margin: CGFloat = 0.0 {
+    @IBInspectable public var margin: CGFloat = 0.0 {
         didSet {
             topMarginConstraint.constant = margin
             leftMarginConstraint.constant = margin
@@ -30,14 +30,14 @@ public class SelectField: UIView, XibInitializable {
         }
     }
     
-    @IBInspectable var text: String = "選択してください" {
+    @IBInspectable public var text: String = "選択してください" {
         didSet {
             label.text = text
         }
     }
     
-    @IBInspectable var selectTitle: String?
-    @IBInspectable var selectMessage: String?
+    @IBInspectable public var selectTitle: String?
+    @IBInspectable public var selectMessage: String?
     
     @IBOutlet weak var label: UILabel! {
         didSet {

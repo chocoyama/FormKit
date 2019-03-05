@@ -13,21 +13,38 @@ class SubmitButton: UIView, XibInitializable {
 
     @IBOutlet weak var button: UIButton!
     
-    @IBInspectable public var buttonTitle: String = "Submit" {
-        didSet {
-            button.setTitle(buttonTitle, for: .normal)
+    @IBInspectable public var title: String = "Submit" {
+        didSet { button.setTitle(title, for: .normal) }
+    }
+    
+    @IBInspectable public var fontSize: CGFloat = 17.0 {
+        didSet { setFont(size: fontSize, isBold: isBold) }
+    }
+    
+    @IBInspectable public var isBold: Bool = false {
+        didSet { setFont(size: fontSize, isBold: isBold) }
+    }
+    
+    private func setFont(size: CGFloat, isBold: Bool) {
+        if isBold {
+            button.titleLabel?.font = .boldSystemFont(ofSize: size)
+        } else {
+            button.titleLabel?.font = .systemFont(ofSize: size)
         }
     }
     
-    @IBInspectable public var buttonTitleColor: UIColor = .black {
-        didSet {
-            button.setTitleColor(buttonTitleColor, for: .normal)
-        }
+    @IBInspectable public var titleColor: UIColor = .black {
+        didSet { button.setTitleColor(titleColor, for: .normal) }
     }
     
     @IBInspectable public var buttonBackgroundColor: UIColor = .white {
+        didSet { backgroundColor = buttonBackgroundColor }
+    }
+    
+    @IBInspectable public var isEnabled: Bool = true {
         didSet {
-            backgroundColor = buttonBackgroundColor
+            button.isUserInteractionEnabled = isEnabled
+            backgroundColor = isEnabled ? buttonBackgroundColor : UIColor(red: 0.78, green: 0.78, blue: 0.81, alpha: 1.0)
         }
     }
     
