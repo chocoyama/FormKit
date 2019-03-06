@@ -32,6 +32,7 @@
 		6B424F2F222EA20900CE1A23 /* SelectField.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6B424F2E222EA20900CE1A23 /* SelectField.xib */; };
 		6B424F31222EA44400CE1A23 /* Asset.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6B424F30222EA44400CE1A23 /* Asset.xcassets */; };
 		6B424F33222EAE8900CE1A23 /* AlertController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B424F32222EAE8900CE1A23 /* AlertController.swift */; };
+		6B424F352230312A00CE1A23 /* Tag.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B424F342230312A00CE1A23 /* Tag.swift */; };
 		6BBE9DBA2227FEB200CE8433 /* CustomEdgeInsetsLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BBE9DB92227FEB200CE8433 /* CustomEdgeInsetsLabel.swift */; };
 /* End PBXBuildFile section */
 
@@ -95,6 +96,7 @@
 		6B424F2E222EA20900CE1A23 /* SelectField.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SelectField.xib; sourceTree = "<group>"; };
 		6B424F30222EA44400CE1A23 /* Asset.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Asset.xcassets; sourceTree = "<group>"; };
 		6B424F32222EAE8900CE1A23 /* AlertController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertController.swift; sourceTree = "<group>"; };
+		6B424F342230312A00CE1A23 /* Tag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tag.swift; sourceTree = "<group>"; };
 		6BBE9DB92227FEB200CE8433 /* CustomEdgeInsetsLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomEdgeInsetsLabel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -216,6 +218,7 @@
 				6B308F1D2222EC5400E36DA7 /* XibInitializable.swift */,
 				6B424F21222D7F5900CE1A23 /* UIView+.swift */,
 				6B424F32222EAE8900CE1A23 /* AlertController.swift */,
+				6B424F342230312A00CE1A23 /* Tag.swift */,
 			);
 			path = Util;
 			sourceTree = "<group>";
@@ -411,6 +414,7 @@
 				6B308F1B2222EBF200E36DA7 /* FormViewController.swift in Sources */,
 				6B308F202222ECB400E36DA7 /* TextInputField.swift in Sources */,
 				6B308F1E2222EC5400E36DA7 /* XibInitializable.swift in Sources */,
+				6B424F352230312A00CE1A23 /* Tag.swift in Sources */,
 				6B424F2D222EA1FD00CE1A23 /* SelectField.swift in Sources */,
 				6B424F28222E918000CE1A23 /* SubmitButton.swift in Sources */,
 				6BBE9DBA2227FEB200CE8433 /* CustomEdgeInsetsLabel.swift in Sources */,

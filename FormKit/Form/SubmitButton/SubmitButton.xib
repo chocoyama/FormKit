@@ -20,19 +20,20 @@
             <rect key="frame" x="0.0" y="0.0" width="286" height="190"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9TS-kF-GJ3">
-                    <rect key="frame" x="120" y="80" width="46" height="30"/>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9TS-kF-GJ3">
+                    <rect key="frame" x="0.0" y="0.0" width="286" height="190"/>
                     <state key="normal" title="Button"/>
+                    <connections>
+                        <action selector="didTappedButton:" destination="-1" eventType="touchUpInside" id="xli-6d-GtW"/>
+                    </connections>
                 </button>
             </subviews>
             <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
             <constraints>
-                <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="9TS-kF-GJ3" secondAttribute="trailing" id="6RS-Kf-RMq"/>
-                <constraint firstItem="vUN-kp-3ea" firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="9TS-kF-GJ3" secondAttribute="bottom" id="P6z-f3-gYC"/>
-                <constraint firstItem="9TS-kF-GJ3" firstAttribute="centerY" secondItem="iN0-l3-epB" secondAttribute="centerY" id="Rzk-Lt-zyE"/>
-                <constraint firstItem="9TS-kF-GJ3" firstAttribute="top" relation="greaterThanOrEqual" secondItem="vUN-kp-3ea" secondAttribute="top" id="ZUY-KW-Ogz"/>
-                <constraint firstItem="9TS-kF-GJ3" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="vUN-kp-3ea" secondAttribute="leading" id="fdR-If-5qz"/>
-                <constraint firstItem="9TS-kF-GJ3" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="ffV-Su-dip"/>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="9TS-kF-GJ3" secondAttribute="trailing" id="6RS-Kf-RMq"/>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="bottom" secondItem="9TS-kF-GJ3" secondAttribute="bottom" id="P6z-f3-gYC"/>
+                <constraint firstItem="9TS-kF-GJ3" firstAttribute="top" secondItem="vUN-kp-3ea" secondAttribute="top" id="ZUY-KW-Ogz"/>
+                <constraint firstItem="9TS-kF-GJ3" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" id="fdR-If-5qz"/>
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
             <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>

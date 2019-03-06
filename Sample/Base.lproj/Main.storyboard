@@ -253,11 +253,17 @@
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
                     <connections>
+                        <outlet property="addressDetailInputField" destination="m4O-Y2-c8L" id="aV6-TS-LTa"/>
+                        <outlet property="addressInputField" destination="8Uu-fY-xs4" id="ea3-wa-lbf"/>
+                        <outlet property="cityInputField" destination="CHM-iQ-5aa" id="kLT-Ix-nOI"/>
                         <outlet property="firstNameInputField" destination="Ylj-JC-BsE" id="6xW-id-2n7"/>
                         <outlet property="lastNameInputField" destination="ah6-V3-vsQ" id="NBC-X6-ZkX"/>
+                        <outlet property="phoneNumberInputField" destination="Z6G-Ay-mcp" id="3fT-67-jO5"/>
                         <outlet property="postalCodeInputField" destination="kIK-5x-5CG" id="gfY-Hy-6zJ"/>
+                        <outlet property="postalCodeSubmitButton" destination="JoC-aE-aid" id="Atj-kE-Rk2"/>
                         <outlet property="prefectureSelectField" destination="JWb-mb-elW" id="ZlB-Mw-OVU"/>
                         <outlet property="scrollView" destination="3KM-iM-YCY" id="CAs-gj-nzl"/>
+                        <outlet property="userSubmitButton" destination="Tgn-Iq-Qab" id="0nd-Dp-146"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>

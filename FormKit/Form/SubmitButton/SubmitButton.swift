@@ -8,8 +8,12 @@
 
 import UIKit
 
+public protocol SubmitButtonDelegate: class {
+    func submitButton(_ submitButton: SubmitButton, didTappedButton button: UIButton)
+}
+
 @IBDesignable
-class SubmitButton: UIView, XibInitializable {
+public class SubmitButton: UIView, XibInitializable {
 
     @IBOutlet weak var button: UIButton!
     
@@ -25,6 +29,8 @@ class SubmitButton: UIView, XibInitializable {
         didSet { setFont(size: fontSize, isBold: isBold) }
     }
     
+    public weak var delegate: SubmitButtonDelegate?
+    
     private func setFont(size: CGFloat, isBold: Bool) {
         if isBold {
             button.titleLabel?.font = .boldSystemFont(ofSize: size)
@@ -38,13 +44,13 @@ class SubmitButton: UIView, XibInitializable {
     }
     
     @IBInspectable public var buttonBackgroundColor: UIColor = .white {
-        didSet { backgroundColor = buttonBackgroundColor }
+        didSet { button.backgroundColor = buttonBackgroundColor }
     }
     
     @IBInspectable public var isEnabled: Bool = true {
         didSet {
             button.isUserInteractionEnabled = isEnabled
-            backgroundColor = isEnabled ? buttonBackgroundColor : UIColor(red: 0.78, green: 0.78, blue: 0.81, alpha: 1.0)
+            button.backgroundColor = isEnabled ? buttonBackgroundColor : UIColor(red: 0.78, green: 0.78, blue: 0.81, alpha: 1.0)
         }
     }
     
@@ -58,4 +64,7 @@ class SubmitButton: UIView, XibInitializable {
         setXibView()
     }
 
+    @IBAction func didTappedButton(_ sender: UIButton) {
+        delegate?.submitButton(self, didTappedButton: sender)
+    }
 }
