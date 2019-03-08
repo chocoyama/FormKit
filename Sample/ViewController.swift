@@ -16,7 +16,9 @@ class ViewController: UIViewController {
             scrollView.alwaysBounceVertical = true
         }
     }
+    @IBOutlet weak var stackView: UIStackView!
     
+    @IBOutlet weak var imagePickerField: ImagePickerField!
     @IBOutlet weak var lastNameInputField: TextInputField! {
         didSet {
             lastNameInputField.setTag(InputFieldTag.lastName)

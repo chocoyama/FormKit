@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		6B214E44223299EC00A7901E /* Bundle+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B214E43223299EC00A7901E /* Bundle+.swift */; };
 		6B308EEE2222EBBD00E36DA7 /* FormKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B308EE42222EBBD00E36DA7 /* FormKit.framework */; };
 		6B308EF32222EBBD00E36DA7 /* FormKitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B308EF22222EBBD00E36DA7 /* FormKitTests.swift */; };
 		6B308EF52222EBBD00E36DA7 /* FormKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 6B308EE72222EBBD00E36DA7 /* FormKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -33,6 +34,11 @@
 		6B424F31222EA44400CE1A23 /* Asset.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6B424F30222EA44400CE1A23 /* Asset.xcassets */; };
 		6B424F33222EAE8900CE1A23 /* AlertController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B424F32222EAE8900CE1A23 /* AlertController.swift */; };
 		6B424F352230312A00CE1A23 /* Tag.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B424F342230312A00CE1A23 /* Tag.swift */; };
+		6B424F382232946800CE1A23 /* ImagePickerField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B424F372232946800CE1A23 /* ImagePickerField.swift */; };
+		6B424F3A2232947700CE1A23 /* ImagePickerField.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6B424F392232947700CE1A23 /* ImagePickerField.xib */; };
+		6B424F3D2232950700CE1A23 /* ImagePickerFieldCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B424F3B2232950700CE1A23 /* ImagePickerFieldCollectionViewCell.swift */; };
+		6B424F3E2232950700CE1A23 /* ImagePickerFieldCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6B424F3C2232950700CE1A23 /* ImagePickerFieldCollectionViewCell.xib */; };
+		6B424F40223296D700CE1A23 /* CellRegisterable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B424F3F223296D700CE1A23 /* CellRegisterable.swift */; };
 		6BBE9DBA2227FEB200CE8433 /* CustomEdgeInsetsLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BBE9DB92227FEB200CE8433 /* CustomEdgeInsetsLabel.swift */; };
 /* End PBXBuildFile section */
 
@@ -68,6 +74,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		6B214E43223299EC00A7901E /* Bundle+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Bundle+.swift"; sourceTree = "<group>"; };
 		6B308EE42222EBBD00E36DA7 /* FormKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = FormKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		6B308EE72222EBBD00E36DA7 /* FormKit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FormKit.h; sourceTree = "<group>"; };
 		6B308EE82222EBBD00E36DA7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -97,6 +104,11 @@
 		6B424F30222EA44400CE1A23 /* Asset.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Asset.xcassets; sourceTree = "<group>"; };
 		6B424F32222EAE8900CE1A23 /* AlertController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertController.swift; sourceTree = "<group>"; };
 		6B424F342230312A00CE1A23 /* Tag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tag.swift; sourceTree = "<group>"; };
+		6B424F372232946800CE1A23 /* ImagePickerField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePickerField.swift; sourceTree = "<group>"; };
+		6B424F392232947700CE1A23 /* ImagePickerField.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ImagePickerField.xib; sourceTree = "<group>"; };
+		6B424F3B2232950700CE1A23 /* ImagePickerFieldCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePickerFieldCollectionViewCell.swift; sourceTree = "<group>"; };
+		6B424F3C2232950700CE1A23 /* ImagePickerFieldCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ImagePickerFieldCollectionViewCell.xib; sourceTree = "<group>"; };
+		6B424F3F223296D700CE1A23 /* CellRegisterable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CellRegisterable.swift; sourceTree = "<group>"; };
 		6BBE9DB92227FEB200CE8433 /* CustomEdgeInsetsLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomEdgeInsetsLabel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -219,6 +231,8 @@
 				6B424F21222D7F5900CE1A23 /* UIView+.swift */,
 				6B424F32222EAE8900CE1A23 /* AlertController.swift */,
 				6B424F342230312A00CE1A23 /* Tag.swift */,
+				6B424F3F223296D700CE1A23 /* CellRegisterable.swift */,
+				6B214E43223299EC00A7901E /* Bundle+.swift */,
 			);
 			path = Util;
 			sourceTree = "<group>";
@@ -226,6 +240,7 @@
 		6B424F23222D841A00CE1A23 /* Form */ = {
 			isa = PBXGroup;
 			children = (
+				6B424F362232944F00CE1A23 /* ImagePickerField */,
 				6B424F2B222EA1E600CE1A23 /* SelectField */,
 				6B424F26222E916E00CE1A23 /* SubmitButton */,
 				6B308F242222F2A700E36DA7 /* TextInputField */,
@@ -249,6 +264,17 @@
 				6B424F2E222EA20900CE1A23 /* SelectField.xib */,
 			);
 			path = SelectField;
+			sourceTree = "<group>";
+		};
+		6B424F362232944F00CE1A23 /* ImagePickerField */ = {
+			isa = PBXGroup;
+			children = (
+				6B424F372232946800CE1A23 /* ImagePickerField.swift */,
+				6B424F392232947700CE1A23 /* ImagePickerField.xib */,
+				6B424F3B2232950700CE1A23 /* ImagePickerFieldCollectionViewCell.swift */,
+				6B424F3C2232950700CE1A23 /* ImagePickerFieldCollectionViewCell.xib */,
+			);
+			path = ImagePickerField;
 			sourceTree = "<group>";
 		};
 		6BBE9DB82227FEA700CE8433 /* CustomEdgeInsetsLabel */ = {
@@ -376,7 +402,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				6B424F31222EA44400CE1A23 /* Asset.xcassets in Resources */,
+				6B424F3A2232947700CE1A23 /* ImagePickerField.xib in Resources */,
 				6B424F2F222EA20900CE1A23 /* SelectField.xib in Resources */,
+				6B424F3E2232950700CE1A23 /* ImagePickerFieldCollectionViewCell.xib in Resources */,
 				6B308F282222F2B800E36DA7 /* PlaceholderTextView.xib in Resources */,
 				6B424F2A222E918A00CE1A23 /* SubmitButton.xib in Resources */,
 				6B308F232222ECCB00E36DA7 /* TextInputField.xib in Resources */,
@@ -414,7 +442,11 @@
 				6B308F1B2222EBF200E36DA7 /* FormViewController.swift in Sources */,
 				6B308F202222ECB400E36DA7 /* TextInputField.swift in Sources */,
 				6B308F1E2222EC5400E36DA7 /* XibInitializable.swift in Sources */,
+				6B424F40223296D700CE1A23 /* CellRegisterable.swift in Sources */,
+				6B424F382232946800CE1A23 /* ImagePickerField.swift in Sources */,
 				6B424F352230312A00CE1A23 /* Tag.swift in Sources */,
+				6B214E44223299EC00A7901E /* Bundle+.swift in Sources */,
+				6B424F3D2232950700CE1A23 /* ImagePickerFieldCollectionViewCell.swift in Sources */,
 				6B424F2D222EA1FD00CE1A23 /* SelectField.swift in Sources */,
 				6B424F28222E918000CE1A23 /* SubmitButton.swift in Sources */,
 				6BBE9DBA2227FEB200CE8433 /* CustomEdgeInsetsLabel.swift in Sources */,
