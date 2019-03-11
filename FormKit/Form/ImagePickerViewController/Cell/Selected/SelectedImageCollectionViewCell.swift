@@ -15,6 +15,14 @@ class SelectedImageCollectionViewCell: UICollectionViewCell {
     @discardableResult
     func configure(with image: UIImage) -> Self {
         imageView.image = image
+        imageView.backgroundColor = .clear
+        return self
+    }
+    
+    @discardableResult
+    func configureEmpty() -> Self {
+        imageView.image = nil
+        imageView.backgroundColor = .white
         return self
     }
     

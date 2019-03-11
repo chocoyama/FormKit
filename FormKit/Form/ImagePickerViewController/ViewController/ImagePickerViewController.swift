@@ -62,26 +62,82 @@ extension ImagePickerViewController: UICollectionViewDelegate {
         
         let isSelected = cell.toggleState()
         if isSelected {
-            append(image: image, at: indexPath)
-            selectedCollectionView.scrollToRight(animated: true)
+            let insertedIndexPath = append(image: image, at: indexPath)
+            
+            selectedCollectionView.selectItem(at: insertedIndexPath,
+                                              animated: true,
+                                              scrollPosition: .right)
         } else {
-            remove(image: image, at: indexPath)
+            let removedIndexPath = remove(image: image, at: indexPath)
+            
+            if let indexPath = removedIndexPath {
+                selectedCollectionView.selectItem(at: indexPath,
+                                                  animated: true,
+                                                  scrollPosition: .right)
+            }
         }
     }
     
-    private func append(image: UIImage, at selectCollectionViewIndexPath: IndexPath) {
+    private func append(image: UIImage, at selectCollectionViewIndexPath: IndexPath) -> IndexPath {
         let insertIndex = selectedCollectionViewDataSource.selectedValues.count
         selectedCollectionViewDataSource.selectedValues.insert((selectCollectionViewIndexPath: selectCollectionViewIndexPath, image: image), at: insertIndex)
-        selectedCollectionView.insertItems(at: [IndexPath(item: insertIndex, section: 0)])
+        
+        let insertIndexPath = IndexPath(item: insertIndex, section: 0)
+        
+        let cell = getCell(at: insertIndexPath)
+        UIView.transition(
+            with: cell.imageView,
+            duration: 0.3,
+            options: .transitionCrossDissolve,
+            animations: {
+                cell.configure(with: image)
+            },
+            completion: { (finished) in
+            }
+        )
+        
+        return insertIndexPath
     }
     
-    private func remove(image: UIImage, at selectCollectionViewIndexPath: IndexPath) {
-        let removeIndices = selectedCollectionViewDataSource.selectedValues
+    private func remove(image: UIImage, at selectCollectionViewIndexPath: IndexPath) -> IndexPath? {
+        let removeIndexPaths = selectedCollectionViewDataSource.selectedValues
             .enumerated()
             .filter { $0.element.selectCollectionViewIndexPath == selectCollectionViewIndexPath }
             .map { IndexPath(item: $0.offset, section: 0) }
+        
+        guard let removeIndexPath = removeIndexPaths.first else { return nil }
+        
         selectedCollectionViewDataSource.selectedValues.removeAll { $0.selectCollectionViewIndexPath == selectCollectionViewIndexPath }
-        selectedCollectionView.deleteItems(at: removeIndices)
+
+        let cell = getCell(at: removeIndexPath)
+        UIView.transition(
+            with: cell.imageView,
+            duration: 0.3,
+            options: .transitionCrossDissolve,
+            animations: {
+                cell.configureEmpty()
+            },
+            completion: { (finished) in
+                self.selectCollectionView.performBatchUpdates({
+                    let reloadRange = (removeIndexPath.item..<(self.selectedCollectionViewDataSource.selectedValues.count + 1))
+                    let reloadIndexPaths = reloadRange.map { IndexPath(item: $0, section: 0) }
+                    self.selectedCollectionView.reloadItems(at: reloadIndexPaths)
+                }, completion: { (finished) in
+                })
+            }
+        )
+        
+        return removeIndexPath
+    }
+    
+    private func getCell(at indexPath: IndexPath) -> SelectedImageCollectionViewCell {
+        if let visibleCell = selectedCollectionView.cellForItem(at: indexPath) as? SelectedImageCollectionViewCell {
+            return visibleCell
+        } else {
+            let dequeueCell =  SelectedImageCollectionViewCell
+                .dequeue(from: selectedCollectionView, indexPath: indexPath)
+            return dequeueCell
+        }
     }
 }
 
@@ -127,18 +183,25 @@ extension SelectCollectionViewDataSource: UICollectionViewDataSource {
 // MARK:- SelectedCollectionViewDataSource
 
 class SelectedCollectionViewDataSource: NSObject {
+    var maxSelectCount: Int = 10
     var selectedValues: [(selectCollectionViewIndexPath: IndexPath, image: UIImage)] = []
 }
 
 extension SelectedCollectionViewDataSource: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return selectedValues.count
+        return maxSelectCount
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let selectedValue = selectedValues[indexPath.item]
-        return SelectedImageCollectionViewCell
-            .dequeue(from: collectionView, indexPath: indexPath)
-            .configure(with: selectedValue.image)
+        if indexPath.item <= selectedValues.count - 1 {
+            let selectedValue = selectedValues[indexPath.item]
+            return SelectedImageCollectionViewCell
+                .dequeue(from: collectionView, indexPath: indexPath)
+                .configure(with: selectedValue.image)
+        } else {
+            return SelectedImageCollectionViewCell
+                .dequeue(from: collectionView, indexPath: indexPath)
+                .configureEmpty()
+        }
     }
 }
