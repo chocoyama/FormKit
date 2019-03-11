@@ -9,7 +9,7 @@
 import UIKit
 import Photos
 
-class ImagePickerCollectionViewCell: UICollectionViewCell, AssetLoadable {
+class SelectImageCollectionViewCell: UICollectionViewCell, AssetLoadable {
     
     let imageManager = PHImageManager()
     let imageContentMode: PHImageContentMode = .aspectFill
