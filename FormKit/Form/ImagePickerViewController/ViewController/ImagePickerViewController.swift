@@ -33,6 +33,7 @@ public class ImagePickerViewController: UIViewController {
     init(columnCount: Int) {
         self.columnCount = columnCount
         super.init(nibName: String(describing: ImagePickerViewController.self), bundle: .current)
+        modalPresentationStyle = .overCurrentContext
     }
     
     required init?(coder aDecoder: NSCoder) {

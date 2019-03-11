@@ -17,5 +17,15 @@ class SelectedImageCollectionViewCell: UICollectionViewCell {
         imageView.image = image
         return self
     }
+    
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        addDropShadow(
+            offsetSize: CGSize(width: 2, height: 2),
+            opacity: 0.6,
+            radius: 4.0,
+            color: .black
+        )
+    }
 
 }

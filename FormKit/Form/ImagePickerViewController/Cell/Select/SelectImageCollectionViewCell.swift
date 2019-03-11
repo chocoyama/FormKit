@@ -47,6 +47,16 @@ class SelectImageCollectionViewCell: UICollectionViewCell, AssetLoadable {
         return imageView.image != nil
     }
     
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        addDropShadow(
+            offsetSize: CGSize(width: 2, height: 2),
+            opacity: 0.6,
+            radius: 4.0,
+            color: .black
+        )
+    }
+    
     @discardableResult
     func configure(with asset: PHAsset) -> Self {
         isSelectedState = false
