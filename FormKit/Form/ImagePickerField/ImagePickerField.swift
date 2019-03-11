@@ -8,6 +8,12 @@
 
 import UIKit
 
+public protocol ImagePickerFieldDelegate: class {
+    func imagePickerField(_ imagePickerField: ImagePickerField,
+                          didSelectAt indexPath: IndexPath,
+                          with imagePickerViewController: ImagePickerViewController)
+}
+
 public class ImagePickerField: UIView, XibInitializable {
     
     @IBInspectable public var pickCount: Int = 0 {
@@ -26,6 +32,8 @@ public class ImagePickerField: UIView, XibInitializable {
             ImagePickerFieldCollectionViewCell.register(for: collectionView, bundle: .current)
         }
     }
+    
+    public weak var delegate: ImagePickerFieldDelegate?
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
@@ -53,7 +61,9 @@ extension ImagePickerField: UICollectionViewDataSource {
 }
 
 extension ImagePickerField: UICollectionViewDelegate {
-    
+    public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        delegate?.imagePickerField(self, didSelectAt: indexPath, with: ImagePickerViewController())
+    }
 }
 
 extension ImagePickerField: UICollectionViewDelegateFlowLayout {

@@ -8,6 +8,14 @@
 
 /* Begin PBXBuildFile section */
 		6B214E44223299EC00A7901E /* Bundle+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B214E43223299EC00A7901E /* Bundle+.swift */; };
+		6B214E4922329E9E00A7901E /* PhotoRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B214E4822329E9E00A7901E /* PhotoRepository.swift */; };
+		6B214E4C2235F10700A7901E /* ImagePickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B214E4A2235F10700A7901E /* ImagePickerViewController.swift */; };
+		6B214E4D2235F10700A7901E /* ImagePickerViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6B214E4B2235F10700A7901E /* ImagePickerViewController.xib */; };
+		6B214E512235F18600A7901E /* ImagePickerCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B214E4F2235F18600A7901E /* ImagePickerCollectionViewCell.swift */; };
+		6B214E522235F18600A7901E /* ImagePickerCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6B214E502235F18600A7901E /* ImagePickerCollectionViewCell.xib */; };
+		6B214E552235F23F00A7901E /* PhotoResource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B214E542235F23F00A7901E /* PhotoResource.swift */; };
+		6B214E572235F30900A7901E /* AssetsCacheable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B214E562235F30900A7901E /* AssetsCacheable.swift */; };
+		6B214E592235F38200A7901E /* AssetLoadable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B214E582235F38200A7901E /* AssetLoadable.swift */; };
 		6B308EEE2222EBBD00E36DA7 /* FormKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B308EE42222EBBD00E36DA7 /* FormKit.framework */; };
 		6B308EF32222EBBD00E36DA7 /* FormKitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B308EF22222EBBD00E36DA7 /* FormKitTests.swift */; };
 		6B308EF52222EBBD00E36DA7 /* FormKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 6B308EE72222EBBD00E36DA7 /* FormKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -75,6 +83,14 @@
 
 /* Begin PBXFileReference section */
 		6B214E43223299EC00A7901E /* Bundle+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Bundle+.swift"; sourceTree = "<group>"; };
+		6B214E4822329E9E00A7901E /* PhotoRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoRepository.swift; sourceTree = "<group>"; };
+		6B214E4A2235F10700A7901E /* ImagePickerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePickerViewController.swift; sourceTree = "<group>"; };
+		6B214E4B2235F10700A7901E /* ImagePickerViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ImagePickerViewController.xib; sourceTree = "<group>"; };
+		6B214E4F2235F18600A7901E /* ImagePickerCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePickerCollectionViewCell.swift; sourceTree = "<group>"; };
+		6B214E502235F18600A7901E /* ImagePickerCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ImagePickerCollectionViewCell.xib; sourceTree = "<group>"; };
+		6B214E542235F23F00A7901E /* PhotoResource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoResource.swift; sourceTree = "<group>"; };
+		6B214E562235F30900A7901E /* AssetsCacheable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetsCacheable.swift; sourceTree = "<group>"; };
+		6B214E582235F38200A7901E /* AssetLoadable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetLoadable.swift; sourceTree = "<group>"; };
 		6B308EE42222EBBD00E36DA7 /* FormKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = FormKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		6B308EE72222EBBD00E36DA7 /* FormKit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FormKit.h; sourceTree = "<group>"; };
 		6B308EE82222EBBD00E36DA7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -139,6 +155,55 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		6B214E4522329E5E00A7901E /* ProtocolExtension */ = {
+			isa = PBXGroup;
+			children = (
+				6B308F1D2222EC5400E36DA7 /* XibInitializable.swift */,
+				6B424F3F223296D700CE1A23 /* CellRegisterable.swift */,
+			);
+			path = ProtocolExtension;
+			sourceTree = "<group>";
+		};
+		6B214E4622329E6F00A7901E /* Extension */ = {
+			isa = PBXGroup;
+			children = (
+				6B214E43223299EC00A7901E /* Bundle+.swift */,
+				6B424F21222D7F5900CE1A23 /* UIView+.swift */,
+			);
+			path = Extension;
+			sourceTree = "<group>";
+		};
+		6B214E4722329E8100A7901E /* Helper */ = {
+			isa = PBXGroup;
+			children = (
+				6B424F32222EAE8900CE1A23 /* AlertController.swift */,
+				6B214E4822329E9E00A7901E /* PhotoRepository.swift */,
+				6B214E562235F30900A7901E /* AssetsCacheable.swift */,
+				6B214E582235F38200A7901E /* AssetLoadable.swift */,
+			);
+			path = Helper;
+			sourceTree = "<group>";
+		};
+		6B214E4E2235F15F00A7901E /* ViewController */ = {
+			isa = PBXGroup;
+			children = (
+				6B214E4A2235F10700A7901E /* ImagePickerViewController.swift */,
+				6B214E4B2235F10700A7901E /* ImagePickerViewController.xib */,
+				6B214E4F2235F18600A7901E /* ImagePickerCollectionViewCell.swift */,
+				6B214E502235F18600A7901E /* ImagePickerCollectionViewCell.xib */,
+			);
+			path = ViewController;
+			sourceTree = "<group>";
+		};
+		6B214E532235F23300A7901E /* Entity */ = {
+			isa = PBXGroup;
+			children = (
+				6B424F342230312A00CE1A23 /* Tag.swift */,
+				6B214E542235F23F00A7901E /* PhotoResource.swift */,
+			);
+			path = Entity;
+			sourceTree = "<group>";
+		};
 		6B308EDA2222EBBD00E36DA7 = {
 			isa = PBXGroup;
 			children = (
@@ -227,12 +292,10 @@
 		6B424F20222D7F4B00CE1A23 /* Util */ = {
 			isa = PBXGroup;
 			children = (
-				6B308F1D2222EC5400E36DA7 /* XibInitializable.swift */,
-				6B424F21222D7F5900CE1A23 /* UIView+.swift */,
-				6B424F32222EAE8900CE1A23 /* AlertController.swift */,
-				6B424F342230312A00CE1A23 /* Tag.swift */,
-				6B424F3F223296D700CE1A23 /* CellRegisterable.swift */,
-				6B214E43223299EC00A7901E /* Bundle+.swift */,
+				6B214E532235F23300A7901E /* Entity */,
+				6B214E4722329E8100A7901E /* Helper */,
+				6B214E4622329E6F00A7901E /* Extension */,
+				6B214E4522329E5E00A7901E /* ProtocolExtension */,
 			);
 			path = Util;
 			sourceTree = "<group>";
@@ -269,6 +332,7 @@
 		6B424F362232944F00CE1A23 /* ImagePickerField */ = {
 			isa = PBXGroup;
 			children = (
+				6B214E4E2235F15F00A7901E /* ViewController */,
 				6B424F372232946800CE1A23 /* ImagePickerField.swift */,
 				6B424F392232947700CE1A23 /* ImagePickerField.xib */,
 				6B424F3B2232950700CE1A23 /* ImagePickerFieldCollectionViewCell.swift */,
@@ -401,12 +465,14 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6B214E522235F18600A7901E /* ImagePickerCollectionViewCell.xib in Resources */,
 				6B424F31222EA44400CE1A23 /* Asset.xcassets in Resources */,
 				6B424F3A2232947700CE1A23 /* ImagePickerField.xib in Resources */,
 				6B424F2F222EA20900CE1A23 /* SelectField.xib in Resources */,
 				6B424F3E2232950700CE1A23 /* ImagePickerFieldCollectionViewCell.xib in Resources */,
 				6B308F282222F2B800E36DA7 /* PlaceholderTextView.xib in Resources */,
 				6B424F2A222E918A00CE1A23 /* SubmitButton.xib in Resources */,
+				6B214E4D2235F10700A7901E /* ImagePickerViewController.xib in Resources */,
 				6B308F232222ECCB00E36DA7 /* TextInputField.xib in Resources */,
 				6B308F1C2222EBF200E36DA7 /* FormViewController.xib in Resources */,
 			);
@@ -439,14 +505,20 @@
 				6B424F22222D7F5900CE1A23 /* UIView+.swift in Sources */,
 				6B424F25222D846100CE1A23 /* TextInputFieldConfiguration.swift in Sources */,
 				6B424F33222EAE8900CE1A23 /* AlertController.swift in Sources */,
+				6B214E4C2235F10700A7901E /* ImagePickerViewController.swift in Sources */,
+				6B214E592235F38200A7901E /* AssetLoadable.swift in Sources */,
+				6B214E552235F23F00A7901E /* PhotoResource.swift in Sources */,
 				6B308F1B2222EBF200E36DA7 /* FormViewController.swift in Sources */,
 				6B308F202222ECB400E36DA7 /* TextInputField.swift in Sources */,
+				6B214E512235F18600A7901E /* ImagePickerCollectionViewCell.swift in Sources */,
 				6B308F1E2222EC5400E36DA7 /* XibInitializable.swift in Sources */,
 				6B424F40223296D700CE1A23 /* CellRegisterable.swift in Sources */,
 				6B424F382232946800CE1A23 /* ImagePickerField.swift in Sources */,
 				6B424F352230312A00CE1A23 /* Tag.swift in Sources */,
 				6B214E44223299EC00A7901E /* Bundle+.swift in Sources */,
+				6B214E4922329E9E00A7901E /* PhotoRepository.swift in Sources */,
 				6B424F3D2232950700CE1A23 /* ImagePickerFieldCollectionViewCell.swift in Sources */,
+				6B214E572235F30900A7901E /* AssetsCacheable.swift in Sources */,
 				6B424F2D222EA1FD00CE1A23 /* SelectField.swift in Sources */,
 				6B424F28222E918000CE1A23 /* SubmitButton.swift in Sources */,
 				6BBE9DBA2227FEB200CE8433 /* CustomEdgeInsetsLabel.swift in Sources */,

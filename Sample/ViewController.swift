@@ -18,7 +18,11 @@ class ViewController: UIViewController {
     }
     @IBOutlet weak var stackView: UIStackView!
     
-    @IBOutlet weak var imagePickerField: ImagePickerField!
+    @IBOutlet weak var imagePickerField: ImagePickerField! {
+        didSet {
+            imagePickerField.delegate = self
+        }
+    }
     @IBOutlet weak var lastNameInputField: TextInputField! {
         didSet {
             lastNameInputField.setTag(InputFieldTag.lastName)
@@ -132,6 +136,12 @@ extension ViewController: SelectedFieldDelegate {
     }
 }
 
+extension ViewController: ImagePickerFieldDelegate {
+    func imagePickerField(_ imagePickerField: ImagePickerField, didSelectAt indexPath: IndexPath, with imagePickerViewController: ImagePickerViewController) {
+        present(imagePickerViewController, animated: true, completion: nil)
+    }
+}
+
 extension ViewController {
     struct UserRegistrationForm {
         var lastName: String?
@@ -174,3 +184,5 @@ extension ViewController {
         var value: Int { return self.rawValue }
     }
 }
+
+
