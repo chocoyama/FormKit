@@ -62,7 +62,8 @@ extension ImagePickerField: UICollectionViewDataSource {
 
 extension ImagePickerField: UICollectionViewDelegate {
     public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        delegate?.imagePickerField(self, didSelectAt: indexPath, with: ImagePickerViewController())
+        let imagePickerViewController = ImagePickerViewController(columnCount: 3)
+        delegate?.imagePickerField(self, didSelectAt: indexPath, with: imagePickerViewController)
     }
 }
 

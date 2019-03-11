@@ -45,7 +45,11 @@
                                     <action selector="didTappedCancelBarButtonItem:" destination="-1" id="PuH-ca-fsf"/>
                                 </connections>
                             </barButtonItem>
-                            <barButtonItem key="rightBarButtonItem" systemItem="done" id="eNh-sa-ZFq"/>
+                            <barButtonItem key="rightBarButtonItem" systemItem="done" id="eNh-sa-ZFq">
+                                <connections>
+                                    <action selector="didTappedDoneBarButtonItem:" destination="-1" id="DQw-fK-Gma"/>
+                                </connections>
+                            </barButtonItem>
                         </navigationItem>
                     </items>
                 </navigationBar>

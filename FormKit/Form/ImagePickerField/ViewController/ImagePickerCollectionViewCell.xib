@@ -19,11 +19,12 @@
                 <rect key="frame" x="0.0" y="0.0" width="192" height="191"/>
                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                 <subviews>
-                    <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="I1g-u6-tfY">
+                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="I1g-u6-tfY">
                         <rect key="frame" x="0.0" y="0.0" width="192" height="191"/>
                     </imageView>
                 </subviews>
             </view>
+            <color key="backgroundColor" red="0.016804177310000001" green="0.19835099580000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
             <constraints>
                 <constraint firstAttribute="trailing" secondItem="I1g-u6-tfY" secondAttribute="trailing" id="7oZ-Qc-vGJ"/>
                 <constraint firstAttribute="bottom" secondItem="I1g-u6-tfY" secondAttribute="bottom" id="Wga-DH-OIg"/>
@@ -34,6 +35,10 @@
             <size key="customSize" width="192" height="191"/>
             <connections>
                 <outlet property="imageView" destination="I1g-u6-tfY" id="Qqh-CA-D2q"/>
+                <outlet property="imageViewBottomConstraint" destination="Wga-DH-OIg" id="Y8G-N9-C9k"/>
+                <outlet property="imageViewLeftConstraint" destination="zBy-dv-rF7" id="mzK-xD-x36"/>
+                <outlet property="imageViewRightConstraint" destination="7oZ-Qc-vGJ" id="UwS-Cv-Vcn"/>
+                <outlet property="imageViewTopConstraint" destination="rJA-pB-65Y" id="ktL-Ww-2jE"/>
             </connections>
             <point key="canvasLocation" x="251.19999999999999" y="217.24137931034485"/>
         </collectionViewCell>

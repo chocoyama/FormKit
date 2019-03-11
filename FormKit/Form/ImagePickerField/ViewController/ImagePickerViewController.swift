@@ -17,10 +17,14 @@ public class ImagePickerViewController: UIViewController {
         }
     }
     
+    private let columnCount: Int
+    
     private let repository = PhotoRepository()
     private var allAssets: PHFetchResult<PHAsset>?
+    private var selectedValues: [(indexPath: IndexPath, image: UIImage)] = []
     
-    init() {
+    init(columnCount: Int) {
+        self.columnCount = columnCount
         super.init(nibName: String(describing: ImagePickerViewController.self), bundle: .current)
     }
     
@@ -30,10 +34,13 @@ public class ImagePickerViewController: UIViewController {
     
     override public func viewDidLoad() {
         super.viewDidLoad()
-        
         allAssets = repository.fetchAllPhotos()
     }
 
+    @IBAction func didTappedDoneBarButtonItem(_ sender: UIBarButtonItem) {
+//        let images = selectedValues.map { $0.image }
+    }
+    
     @IBAction func didTappedCancelBarButtonItem(_ sender: UIBarButtonItem) {
         dismiss(animated: true, completion: nil)
     }
@@ -55,13 +62,22 @@ extension ImagePickerViewController: UICollectionViewDataSource {
 }
 
 extension ImagePickerViewController: UICollectionViewDelegate {
-    
+    public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        guard let cell = collectionView.cellForItem(at: indexPath) as? ImagePickerCollectionViewCell,
+            let image = cell.imageView.image else { return }
+        let isSelected = cell.toggleState()
+        if isSelected {
+            selectedValues.append((indexPath: indexPath, image: image))
+        } else {
+            selectedValues.removeAll { $0.indexPath == indexPath }
+        }
+    }
 }
 
 extension ImagePickerViewController: UICollectionViewDelegateFlowLayout {
     public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let columnCount: CGFloat = 2
         let screenWidth = UIScreen.main.bounds.width
+        let columnCount = CGFloat(self.columnCount)
         
         var totalMargin: CGFloat = 0.0
         if let flowLayout = collectionViewLayout as? UICollectionViewFlowLayout {
