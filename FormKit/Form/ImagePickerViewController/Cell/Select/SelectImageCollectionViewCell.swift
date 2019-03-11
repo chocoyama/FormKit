@@ -36,7 +36,7 @@ class SelectImageCollectionViewCell: UICollectionViewCell, AssetLoadable {
         ]
     }
     
-    private var isSelectedState: Bool = false {
+    var isSelectedState: Bool = false {
         didSet {
             let constant: CGFloat = isSelectedState ? 3 : 0
             imageViewConstraints.forEach { $0?.constant = constant }
