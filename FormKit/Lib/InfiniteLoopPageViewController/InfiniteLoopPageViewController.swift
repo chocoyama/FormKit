@@ -78,16 +78,16 @@ extension InfiniteLoopPageViewController {
         switch index {
         case -1 where shouldInfiniteLoop:
             if let lastIndex = pages.indices.last {
-                return pageableDataSource?.viewController(at: lastIndex, cache: pageCache)
+                return pageableDataSource?.viewController(at: lastIndex, for: self, cache: pageCache)
             } else {
                 return nil
             }
         case -1:
             return nil
         case 0...(pages.count - 1):
-            return pageableDataSource?.viewController(at: index, cache: pageCache)
+            return pageableDataSource?.viewController(at: index, for: self, cache: pageCache)
         default:
-            return shouldInfiniteLoop ? pageableDataSource?.viewController(at: 0, cache: pageCache) : nil
+            return shouldInfiniteLoop ? pageableDataSource?.viewController(at: 0, for: self, cache: pageCache) : nil
         }
     }
 }

@@ -27,7 +27,8 @@ public class ImagePickerViewController: UIViewController {
         }
     }
     
-    @IBOutlet weak var selectContainerView: UIView!
+    @IBOutlet weak var mainContainerView: UIView!
+    @IBOutlet weak var subContainerView: UIView!
     @IBOutlet weak var selectedCollectionView: UICollectionView! {
         didSet {
             SelectedImageCollectionViewCell.register(for: selectedCollectionView, bundle: .current)
@@ -45,7 +46,8 @@ public class ImagePickerViewController: UIViewController {
     private let columnCount: Int
     private let maxSelectCount: Int
     
-    private let pageVC: InfiniteLoopPageViewController
+    private let mainPageVC: InfiniteLoopPageViewController
+    private let subPageVC: InfiniteLoopPageViewController
     private let repository = PhotoRepository()
     
     private var selectedValues: [(indexPath: IndexPath, image: UIImage)] = []
@@ -58,7 +60,15 @@ public class ImagePickerViewController: UIViewController {
         self.columnCount = columnCount
         self.maxSelectCount = maxSelectCount
         
-        pageVC = InfiniteLoopPageViewController(
+        mainPageVC = InfiniteLoopPageViewController(
+            totalPage: Page.allCases.count,
+            shouldInfiniteLoop: false,
+            transitionStyle: .scroll,
+            navigationOrientation: .horizontal,
+            options: nil
+        )
+        
+        subPageVC = InfiniteLoopPageViewController(
             totalPage: Page.allCases.count,
             shouldInfiniteLoop: false,
             transitionStyle: .scroll,
@@ -85,11 +95,17 @@ public class ImagePickerViewController: UIViewController {
     }
     
     private func setUpPageViewController() {
-        pageVC.pageableDataSource = self
-        pageVC.loopPageDelegate = self
-        addChild(pageVC)
-        pageVC.view.overlay(on: selectContainerView)
-        pageVC.didMove(toParent: self)
+        mainPageVC.pageableDataSource = self
+        mainPageVC.loopPageDelegate = self
+        addChild(mainPageVC)
+        mainPageVC.view.overlay(on: mainContainerView)
+        mainPageVC.didMove(toParent: self)
+        
+        subPageVC.pageableDataSource = self
+        subPageVC.loopPageDelegate = self
+        addChild(subPageVC)
+        subPageVC.view.overlay(on: subContainerView)
+        subPageVC.didMove(toParent: self)
     }
     
     private func setUpMenuStackView() {
@@ -98,6 +114,7 @@ public class ImagePickerViewController: UIViewController {
                 let button = UIButton(type: .custom)
                 button.setTitle($0.title, for: .normal)
                 button.setTitleColor(.black, for: .normal)
+                button.backgroundColor = .clear
                 button.tag = $0.rawValue
                 button.addTarget(self, action: #selector(self.didTappedMenuButton(sender:)), for: .touchUpInside)
                 return button
@@ -111,8 +128,12 @@ public class ImagePickerViewController: UIViewController {
         selectedIndicatorViewWidthConstraint.constant = menuItemWidth
     }
     
-    private func movePageView(to index: Int) {
-        pageVC.moveTo(page: index, animated: true)
+    private func moveMainPageView(to index: Int) {
+        mainPageVC.moveTo(page: index, animated: true)
+    }
+    
+    private func moveSubPageView(to index: Int) {
+        subPageVC.moveTo(page: index, animated: true)
     }
     
     private func moveSelectedIndicator(to index: Int) {
@@ -126,7 +147,8 @@ public class ImagePickerViewController: UIViewController {
 // MARK:- User Action
 extension ImagePickerViewController {
     @objc func didTappedMenuButton(sender: UIButton) {
-        movePageView(to: sender.tag)
+        moveMainPageView(to: sender.tag)
+        moveSubPageView(to: sender.tag)
         moveSelectedIndicator(to: sender.tag)
     }
     
@@ -208,7 +230,15 @@ extension ImagePickerViewController: UICollectionViewDelegateFlowLayout {
 // MARK: InfiniteLoopPageViewController
 
 extension ImagePickerViewController: PageableViewControllerDataSource {
-    func viewController(at index: Int, cache: PageCache) -> (UIViewController & Pageable)? {
+    func viewController(at index: Int, for pageViewController: UIPageViewController, cache: PageCache) -> (UIViewController & Pageable)? {
+        if pageViewController == mainPageVC {
+            return mainViewController(at: index, for: pageViewController, cache: cache)
+        } else {
+            return subViewController(at: index, for: pageViewController, cache: cache)
+        }
+    }
+    
+    private func mainViewController(at index: Int, for pageViewController: UIPageViewController, cache: PageCache) -> (UIViewController & Pageable)? {
         if let cachedVC = cache.get(from: "\(index)") { return cachedVC }
         
         let page = Page.allCases[index]
@@ -229,10 +259,46 @@ extension ImagePickerViewController: PageableViewControllerDataSource {
         cache.save(pageableVC, with: "\(index)")
         return pageableVC
     }
+    
+    private func subViewController(at index: Int, for pageViewController: UIPageViewController, cache: PageCache) -> (UIViewController & Pageable)? {
+        if let cachedVC = cache.get(from: "\(index)") { return cachedVC }
+        
+        let page = Page.allCases[index]
+        let pageableVC: (UIViewController & Pageable)
+        switch page {
+        case .album:
+            let vc = CameraViewController()
+            vc.view.backgroundColor = .red
+            vc.pageNumber = page.rawValue
+            pageableVC = vc
+        case .camera:
+            let vc = CameraViewController()
+            vc.view.backgroundColor = .blue
+            vc.pageNumber = page.rawValue
+            pageableVC = vc
+        }
+        
+        cache.save(pageableVC, with: "\(index)")
+        return pageableVC
+    }
 }
 
 extension ImagePickerViewController: InfiniteLoopPageViewControllerDelegate {
     func infiniteLoopPageViewController(_ infiniteLoopPageViewController: InfiniteLoopPageViewController, didChangePageAt index: Int) {
+        if infiniteLoopPageViewController == mainPageVC {
+            mainInfiniteLoopPageViewController(infiniteLoopPageViewController, didChangePageAt: index)
+        } else {
+            subInfiniteLoopPageViewController(infiniteLoopPageViewController, didChangePageAt: index)
+        }
+    }
+    
+    private func mainInfiniteLoopPageViewController(_ infiniteLoopPageViewController: InfiniteLoopPageViewController, didChangePageAt index: Int) {
+        moveSubPageView(to: index)
+        moveSelectedIndicator(to: index)
+    }
+    
+    private func subInfiniteLoopPageViewController(_ infiniteLoopPageViewController: InfiniteLoopPageViewController, didChangePageAt index: Int) {
+        moveMainPageView(to: index)
         moveSelectedIndicator(to: index)
     }
 }
