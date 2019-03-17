@@ -18,8 +18,8 @@ protocol AlbumViewControllerDelegate: class {
                              selectedValues: [(indexPath: IndexPath, image: UIImage)])
 }
 
-class AlbumViewController: UIViewController {
-
+class AlbumViewController: UIViewController, Pageable {
+    
     @IBOutlet weak var collectionView: UICollectionView! {
         didSet {
             SelectImageCollectionViewCell.register(for: collectionView, bundle: .current)
@@ -27,6 +27,7 @@ class AlbumViewController: UIViewController {
         }
     }
     
+    var pageNumber = 0
     private let repository = PhotoRepository()
     private let columnCount: Int
     

@@ -21,6 +21,13 @@
 		6B214E6322363FDB00A7901E /* UICollectionView+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B214E6222363FDB00A7901E /* UICollectionView+.swift */; };
 		6B214E66223DFA5E00A7901E /* AlbumViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B214E64223DFA5E00A7901E /* AlbumViewController.swift */; };
 		6B214E67223DFA5E00A7901E /* AlbumViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6B214E65223DFA5E00A7901E /* AlbumViewController.xib */; };
+		6B214E6F223E0AA300A7901E /* PageCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B214E6A223E0AA200A7901E /* PageCache.swift */; };
+		6B214E70223E0AA300A7901E /* Pageable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B214E6B223E0AA200A7901E /* Pageable.swift */; };
+		6B214E71223E0AA300A7901E /* InfiniteLoopPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B214E6C223E0AA300A7901E /* InfiniteLoopPageViewController.swift */; };
+		6B214E72223E0AA300A7901E /* InfiniteLoopPageViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6B214E6D223E0AA300A7901E /* InfiniteLoopPageViewController.xib */; };
+		6B214E73223E0AA300A7901E /* Page.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B214E6E223E0AA300A7901E /* Page.swift */; };
+		6B214E76223E0CA400A7901E /* CameraViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B214E74223E0CA400A7901E /* CameraViewController.swift */; };
+		6B214E77223E0CA400A7901E /* CameraViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6B214E75223E0CA400A7901E /* CameraViewController.xib */; };
 		6B308EEE2222EBBD00E36DA7 /* FormKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B308EE42222EBBD00E36DA7 /* FormKit.framework */; };
 		6B308EF32222EBBD00E36DA7 /* FormKitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B308EF22222EBBD00E36DA7 /* FormKitTests.swift */; };
 		6B308EF52222EBBD00E36DA7 /* FormKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 6B308EE72222EBBD00E36DA7 /* FormKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -101,6 +108,13 @@
 		6B214E6222363FDB00A7901E /* UICollectionView+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UICollectionView+.swift"; sourceTree = "<group>"; };
 		6B214E64223DFA5E00A7901E /* AlbumViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumViewController.swift; sourceTree = "<group>"; };
 		6B214E65223DFA5E00A7901E /* AlbumViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AlbumViewController.xib; sourceTree = "<group>"; };
+		6B214E6A223E0AA200A7901E /* PageCache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PageCache.swift; sourceTree = "<group>"; };
+		6B214E6B223E0AA200A7901E /* Pageable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Pageable.swift; sourceTree = "<group>"; };
+		6B214E6C223E0AA300A7901E /* InfiniteLoopPageViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InfiniteLoopPageViewController.swift; sourceTree = "<group>"; };
+		6B214E6D223E0AA300A7901E /* InfiniteLoopPageViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = InfiniteLoopPageViewController.xib; sourceTree = "<group>"; };
+		6B214E6E223E0AA300A7901E /* Page.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Page.swift; sourceTree = "<group>"; };
+		6B214E74223E0CA400A7901E /* CameraViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraViewController.swift; sourceTree = "<group>"; };
+		6B214E75223E0CA400A7901E /* CameraViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CameraViewController.xib; sourceTree = "<group>"; };
 		6B308EE42222EBBD00E36DA7 /* FormKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = FormKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		6B308EE72222EBBD00E36DA7 /* FormKit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FormKit.h; sourceTree = "<group>"; };
 		6B308EE82222EBBD00E36DA7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -230,6 +244,8 @@
 				6B214E4B2235F10700A7901E /* ImagePickerViewController.xib */,
 				6B214E64223DFA5E00A7901E /* AlbumViewController.swift */,
 				6B214E65223DFA5E00A7901E /* AlbumViewController.xib */,
+				6B214E74223E0CA400A7901E /* CameraViewController.swift */,
+				6B214E75223E0CA400A7901E /* CameraViewController.xib */,
 			);
 			path = ViewController;
 			sourceTree = "<group>";
@@ -255,8 +271,21 @@
 		6B214E68223E0A6D00A7901E /* Lib */ = {
 			isa = PBXGroup;
 			children = (
+				6B214E69223E0A9400A7901E /* InfiniteLoopPageViewController */,
 			);
 			path = Lib;
+			sourceTree = "<group>";
+		};
+		6B214E69223E0A9400A7901E /* InfiniteLoopPageViewController */ = {
+			isa = PBXGroup;
+			children = (
+				6B214E6C223E0AA300A7901E /* InfiniteLoopPageViewController.swift */,
+				6B214E6D223E0AA300A7901E /* InfiniteLoopPageViewController.xib */,
+				6B214E6E223E0AA300A7901E /* Page.swift */,
+				6B214E6B223E0AA200A7901E /* Pageable.swift */,
+				6B214E6A223E0AA200A7901E /* PageCache.swift */,
+			);
+			path = InfiniteLoopPageViewController;
 			sourceTree = "<group>";
 		};
 		6B308EDA2222EBBD00E36DA7 = {
@@ -525,7 +554,9 @@
 				6B424F31222EA44400CE1A23 /* Asset.xcassets in Resources */,
 				6B424F3A2232947700CE1A23 /* ImagePickerField.xib in Resources */,
 				6B424F2F222EA20900CE1A23 /* SelectField.xib in Resources */,
+				6B214E72223E0AA300A7901E /* InfiniteLoopPageViewController.xib in Resources */,
 				6B424F3E2232950700CE1A23 /* ImagePickerFieldCollectionViewCell.xib in Resources */,
+				6B214E77223E0CA400A7901E /* CameraViewController.xib in Resources */,
 				6B308F282222F2B800E36DA7 /* PlaceholderTextView.xib in Resources */,
 				6B424F2A222E918A00CE1A23 /* SubmitButton.xib in Resources */,
 				6B214E4D2235F10700A7901E /* ImagePickerViewController.xib in Resources */,
@@ -571,17 +602,22 @@
 				6B214E512235F18600A7901E /* SelectImageCollectionViewCell.swift in Sources */,
 				6B308F1E2222EC5400E36DA7 /* XibInitializable.swift in Sources */,
 				6B424F40223296D700CE1A23 /* CellRegisterable.swift in Sources */,
+				6B214E6F223E0AA300A7901E /* PageCache.swift in Sources */,
 				6B214E66223DFA5E00A7901E /* AlbumViewController.swift in Sources */,
+				6B214E76223E0CA400A7901E /* CameraViewController.swift in Sources */,
 				6B214E602236308300A7901E /* SelectedImageCollectionViewCell.swift in Sources */,
 				6B424F382232946800CE1A23 /* ImagePickerField.swift in Sources */,
 				6B424F352230312A00CE1A23 /* Tag.swift in Sources */,
 				6B214E44223299EC00A7901E /* Bundle+.swift in Sources */,
+				6B214E73223E0AA300A7901E /* Page.swift in Sources */,
 				6B214E4922329E9E00A7901E /* PhotoRepository.swift in Sources */,
 				6B424F3D2232950700CE1A23 /* ImagePickerFieldCollectionViewCell.swift in Sources */,
 				6B214E572235F30900A7901E /* AssetsCacheable.swift in Sources */,
+				6B214E71223E0AA300A7901E /* InfiniteLoopPageViewController.swift in Sources */,
 				6B424F2D222EA1FD00CE1A23 /* SelectField.swift in Sources */,
 				6B424F28222E918000CE1A23 /* SubmitButton.swift in Sources */,
 				6BBE9DBA2227FEB200CE8433 /* CustomEdgeInsetsLabel.swift in Sources */,
+				6B214E70223E0AA300A7901E /* Pageable.swift in Sources */,
 				6B308F272222F2B800E36DA7 /* PlaceholderTextView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

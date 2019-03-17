@@ -14,6 +14,11 @@ public protocol ImagePickerViewControllerDelegate: class {
 }
 
 public class ImagePickerViewController: UIViewController {
+    
+    enum Page: Int, CaseIterable {
+        case album
+        case camera
+    }
 
     @IBOutlet weak var selectContainerView: UIView!
     @IBOutlet weak var selectedCollectionView: UICollectionView! {
@@ -43,12 +48,17 @@ public class ImagePickerViewController: UIViewController {
     override public func viewDidLoad() {
         super.viewDidLoad()
         
-        let albumViewController = AlbumViewController(columnCount: columnCount,
-                                                      maxSelectCount: maxSelectCount)
-        albumViewController.delegate = self
-        addChild(albumViewController)
-        albumViewController.view.overlay(on: selectContainerView)
-        albumViewController.didMove(toParent: self)
+        let pageVC = InfiniteLoopPageViewController(
+            totalPage: Page.allCases.count,
+            shouldInfiniteLoop: false,
+            transitionStyle: .scroll,
+            navigationOrientation: .horizontal,
+            options: nil
+        )
+        pageVC.pageableDataSource = self
+        addChild(pageVC)
+        pageVC.view.overlay(on: selectContainerView)
+        pageVC.didMove(toParent: self)
     }
 
     @IBAction func didTappedDoneBarButtonItem(_ sender: UIBarButtonItem) {
@@ -180,5 +190,29 @@ extension ImagePickerViewController: AlbumViewControllerDelegate {
         }
     }
     
+}
+
+extension ImagePickerViewController: PageableViewControllerDataSource {
+    func viewController(at index: Int, cache: PageCache) -> (UIViewController & Pageable)? {
+        if let cachedVC = cache.get(from: "\(index)") { return cachedVC }
+        
+        let page = Page.allCases[index]
+        let pageableVC: (UIViewController & Pageable)
+        switch page {
+        case .album:
+            let vc = AlbumViewController(columnCount: columnCount,
+                                         maxSelectCount: maxSelectCount)
+            vc.delegate = self
+            vc.pageNumber = page.rawValue
+            pageableVC = vc
+        case .camera:
+            let vc = CameraViewController()
+            vc.pageNumber = page.rawValue
+            pageableVC = vc
+        }
+        
+        cache.save(pageableVC, with: "\(index)")
+        return pageableVC
+    }
 }
 
