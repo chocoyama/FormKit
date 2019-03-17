@@ -11,24 +11,18 @@ import Photos
 
 public class ImagePickerViewController: UIViewController {
 
-    @IBOutlet weak var selectCollectionView: UICollectionView! {
-        didSet {
-            SelectImageCollectionViewCell.register(for: selectCollectionView, bundle: .current)
-            selectCollectionView.dataSource = selectCollectionViewDataSource
-        }
-    }
+    @IBOutlet weak var selectContainerView: UIView!
     @IBOutlet weak var selectedCollectionView: UICollectionView! {
         didSet {
             SelectedImageCollectionViewCell.register(for: selectedCollectionView, bundle: .current)
-            selectedCollectionView.dataSource = selectedCollectionViewDataSource
         }
     }
     
     private let columnCount: Int
-    
     private let repository = PhotoRepository()
-    private let selectCollectionViewDataSource = SelectCollectionViewDataSource()
-    private let selectedCollectionViewDataSource = SelectedCollectionViewDataSource()
+    
+    private let maxSelectCount: Int = 10
+    private var selectedValues: [(selectCollectionViewIndexPath: IndexPath, image: UIImage)] = []
     
     init(columnCount: Int) {
         self.columnCount = columnCount
@@ -42,7 +36,12 @@ public class ImagePickerViewController: UIViewController {
     
     override public func viewDidLoad() {
         super.viewDidLoad()
-        selectCollectionViewDataSource.allAssets = repository.fetchAllPhotos()
+        
+        let albumViewController = AlbumViewController(columnCount: columnCount)
+        albumViewController.delegate = self
+        addChild(albumViewController)
+        albumViewController.view.overlay(on: selectContainerView)
+        albumViewController.didMove(toParent: self)
     }
 
     @IBAction func didTappedDoneBarButtonItem(_ sender: UIBarButtonItem) {
@@ -73,13 +72,56 @@ public class ImagePickerViewController: UIViewController {
     }
 }
 
+extension ImagePickerViewController: UICollectionViewDataSource {
+    public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return maxSelectCount
+    }
+    
+    public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        if indexPath.item <= selectedValues.count - 1 {
+            let selectedValue = selectedValues[indexPath.item]
+            return SelectedImageCollectionViewCell
+                .dequeue(from: collectionView, indexPath: indexPath)
+                .configure(with: selectedValue.image)
+        } else {
+            return SelectedImageCollectionViewCell
+                .dequeue(from: collectionView, indexPath: indexPath)
+                .configureEmpty()
+        }
+    }
+    
+    public func collectionView(_ collectionView: UICollectionView, moveItemAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
+        guard destinationIndexPath.item < selectedValues.count else {
+            collectionView.performBatchUpdates({
+                collectionView.reloadSections(IndexSet(integer: 0))
+            }, completion: { (finished) in
+            })
+            return
+        }
+        let removedItem = selectedValues.remove(at: sourceIndexPath.item)
+        selectedValues.insert(removedItem, at: destinationIndexPath.item)
+    }
+    
+    public func collectionView(_ collectionView: UICollectionView, canMoveItemAt indexPath: IndexPath) -> Bool {
+        return indexPath.item < selectedValues.count
+    }
+}
+
 extension ImagePickerViewController: UICollectionViewDelegate {
-    public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        guard collectionView == selectCollectionView,
-            let cell = selectCollectionView.cellForItem(at: indexPath) as? SelectImageCollectionViewCell,
-            let image = cell.imageView.image else { return }
-        
-        if selectedCollectionViewDataSource.selectedValues.count >= selectedCollectionViewDataSource.maxSelectCount && !cell.isSelectedState {
+}
+
+extension ImagePickerViewController: UICollectionViewDelegateFlowLayout {
+    public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        return CGSize(width: 80, height: 80)
+    }
+}
+
+extension ImagePickerViewController: AlbumViewControllerDelegate {
+    func albumViewController(_ albumViewController: AlbumViewController,
+                             didSelectedItemAt indexPath: IndexPath,
+                             cell: SelectImageCollectionViewCell,
+                             image: UIImage) {
+        if selectedValues.count >= maxSelectCount && !cell.isSelectedState {
             return
         }
         
@@ -102,8 +144,8 @@ extension ImagePickerViewController: UICollectionViewDelegate {
     }
     
     private func append(image: UIImage, at selectCollectionViewIndexPath: IndexPath) -> IndexPath? {
-        let insertIndex = selectedCollectionViewDataSource.selectedValues.count
-        selectedCollectionViewDataSource.selectedValues.insert((selectCollectionViewIndexPath: selectCollectionViewIndexPath, image: image), at: insertIndex)
+        let insertIndex = selectedValues.count
+        selectedValues.insert((selectCollectionViewIndexPath: selectCollectionViewIndexPath, image: image), at: insertIndex)
         
         let insertIndexPath = IndexPath(item: insertIndex, section: 0)
         
@@ -114,24 +156,24 @@ extension ImagePickerViewController: UICollectionViewDelegate {
             options: .transitionCrossDissolve,
             animations: {
                 cell.configure(with: image)
-            },
+        },
             completion: { (finished) in
-            }
+        }
         )
         
         return insertIndexPath
     }
     
     private func remove(image: UIImage, at selectCollectionViewIndexPath: IndexPath) -> IndexPath? {
-        let removeIndexPaths = selectedCollectionViewDataSource.selectedValues
+        let removeIndexPaths = selectedValues
             .enumerated()
             .filter { $0.element.selectCollectionViewIndexPath == selectCollectionViewIndexPath }
             .map { IndexPath(item: $0.offset, section: 0) }
         
         guard let removeIndexPath = removeIndexPaths.first else { return nil }
         
-        selectedCollectionViewDataSource.selectedValues.removeAll { $0.selectCollectionViewIndexPath == selectCollectionViewIndexPath }
-
+        selectedValues.removeAll { $0.selectCollectionViewIndexPath == selectCollectionViewIndexPath }
+        
         let cell = getCell(at: removeIndexPath)
         UIView.transition(
             with: cell.imageView,
@@ -139,15 +181,15 @@ extension ImagePickerViewController: UICollectionViewDelegate {
             options: .transitionCrossDissolve,
             animations: {
                 cell.configureEmpty()
-            },
+        },
             completion: { (finished) in
                 self.selectedCollectionView.performBatchUpdates({
-                    let reloadRange = (removeIndexPath.item..<(self.selectedCollectionViewDataSource.selectedValues.count + 1))
+                    let reloadRange = (removeIndexPath.item..<(self.selectedValues.count + 1))
                     let reloadIndexPaths = reloadRange.map { IndexPath(item: $0, section: 0) }
                     self.selectedCollectionView.reloadItems(at: reloadIndexPaths)
                 }, completion: { (finished) in
                 })
-            }
+        }
         )
         
         return removeIndexPath
@@ -162,85 +204,6 @@ extension ImagePickerViewController: UICollectionViewDelegate {
             return dequeueCell
         }
     }
-}
-
-extension ImagePickerViewController: UICollectionViewDelegateFlowLayout {
-    public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        if collectionView == selectCollectionView {
-            let screenWidth = UIScreen.main.bounds.width
-            let columnCount = CGFloat(self.columnCount)
-            
-            var totalMargin: CGFloat = 0.0
-            if let flowLayout = collectionViewLayout as? UICollectionViewFlowLayout {
-                totalMargin += flowLayout.minimumInteritemSpacing * (columnCount - 1)
-                totalMargin += flowLayout.sectionInset.left + flowLayout.sectionInset.right
-            }
-            
-            let itemWidth = (screenWidth - totalMargin) / columnCount
-            return CGSize(width: itemWidth, height: itemWidth)
-        } else {
-            return CGSize(width: 80, height: 80)
-        }
-    }
-}
-
-// MARK:- SelectCollectionViewDataSource
-
-class SelectCollectionViewDataSource: NSObject {
-    var allAssets: PHFetchResult<PHAsset>?
-}
-
-extension SelectCollectionViewDataSource: UICollectionViewDataSource {
-    public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return allAssets?.count ?? 0
-    }
     
-    public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let asset = allAssets?.object(at: indexPath.item) else { fatalError() }
-        return SelectImageCollectionViewCell
-            .dequeue(from: collectionView, indexPath: indexPath)
-            .configure(with: asset)
-    }
 }
 
-// MARK:- SelectedCollectionViewDataSource
-
-class SelectedCollectionViewDataSource: NSObject {
-    var maxSelectCount: Int = 10
-    var selectedValues: [(selectCollectionViewIndexPath: IndexPath, image: UIImage)] = []
-}
-
-extension SelectedCollectionViewDataSource: UICollectionViewDataSource {
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return maxSelectCount
-    }
-
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        if indexPath.item <= selectedValues.count - 1 {
-            let selectedValue = selectedValues[indexPath.item]
-            return SelectedImageCollectionViewCell
-                .dequeue(from: collectionView, indexPath: indexPath)
-                .configure(with: selectedValue.image)
-        } else {
-            return SelectedImageCollectionViewCell
-                .dequeue(from: collectionView, indexPath: indexPath)
-                .configureEmpty()
-        }
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, moveItemAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
-        guard destinationIndexPath.item < selectedValues.count else {
-            collectionView.performBatchUpdates({
-                collectionView.reloadSections(IndexSet(integer: 0))
-            }, completion: { (finished) in
-            })
-            return
-        }
-        let removedItem = selectedValues.remove(at: sourceIndexPath.item)
-        selectedValues.insert(removedItem, at: destinationIndexPath.item)
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, canMoveItemAt indexPath: IndexPath) -> Bool {
-        return indexPath.item < selectedValues.count
-    }
-}

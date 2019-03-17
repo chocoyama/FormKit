@@ -1,0 +1,89 @@
+//
+//  AlbumViewController.swift
+//  FormKit
+//
+//  Created by Takuya Yokoyama on 2019/03/17.
+//  Copyright © 2019 chocoyama. All rights reserved.
+//
+
+import UIKit
+import Photos
+
+protocol AlbumViewControllerDelegate: class {
+    func albumViewController(_ albumViewController: AlbumViewController,
+                             didSelectedItemAt indexPath: IndexPath,
+                             cell: SelectImageCollectionViewCell,
+                             image: UIImage)
+}
+
+class AlbumViewController: UIViewController {
+
+    @IBOutlet weak var collectionView: UICollectionView! {
+        didSet {
+            SelectImageCollectionViewCell.register(for: collectionView, bundle: .current)
+            collectionView.dataSource = self
+        }
+    }
+    
+    private let repository = PhotoRepository()
+    private let columnCount: Int
+    
+    private var allAssets: PHFetchResult<PHAsset>?
+    
+    weak var delegate: AlbumViewControllerDelegate?
+    
+    init(columnCount: Int) {
+        self.columnCount = columnCount
+        super.init(nibName: String(describing: AlbumViewController.self), bundle: .current)
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        allAssets = repository.fetchAllPhotos()
+    }
+
+}
+
+extension AlbumViewController: UICollectionViewDataSource {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return allAssets?.count ?? 0
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        guard let asset = allAssets?.object(at: indexPath.item) else { fatalError() }
+        return SelectImageCollectionViewCell
+            .dequeue(from: collectionView, indexPath: indexPath)
+            .configure(with: asset)
+    }
+    
+    
+}
+
+extension AlbumViewController: UICollectionViewDelegate {
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        guard let cell = collectionView.cellForItem(at: indexPath) as? SelectImageCollectionViewCell,
+            let image = cell.imageView.image else { return }
+        delegate?.albumViewController(self, didSelectedItemAt: indexPath, cell: cell, image: image)
+    }
+}
+
+extension AlbumViewController: UICollectionViewDelegateFlowLayout {
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        let screenWidth = UIScreen.main.bounds.width
+        let columnCount = CGFloat(self.columnCount)
+        
+        var totalMargin: CGFloat = 0.0
+        if let flowLayout = collectionViewLayout as? UICollectionViewFlowLayout {
+            totalMargin += flowLayout.minimumInteritemSpacing * (columnCount - 1)
+            totalMargin += flowLayout.sectionInset.left + flowLayout.sectionInset.right
+        }
+        
+        let itemWidth = (screenWidth - totalMargin) / columnCount
+        return CGSize(width: itemWidth, height: itemWidth)
+    }
+}

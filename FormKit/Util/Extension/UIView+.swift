@@ -10,6 +10,17 @@ import Foundation
 import UIKit
 
 extension UIView {
+    func overlay(on view: UIView) {
+        view.addSubview(self)
+        self.translatesAutoresizingMaskIntoConstraints = false
+        self.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
+        self.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
+        self.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
+        self.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+    }
+}
+
+extension UIView {
     @discardableResult
     func rounded(masksToBounds: Bool = true) -> Self {
         layer.cornerRadius = bounds.width / 2.0
