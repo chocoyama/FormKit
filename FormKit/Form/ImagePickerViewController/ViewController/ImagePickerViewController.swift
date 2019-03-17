@@ -9,6 +9,10 @@
 import UIKit
 import Photos
 
+public protocol ImagePickerViewControllerDelegate: class {
+    func imagePickerViewController(_ imagePickerViewController: ImagePickerViewController, didSelectedImages images: [UIImage])
+}
+
 public class ImagePickerViewController: UIViewController {
 
     @IBOutlet weak var selectContainerView: UIView!
@@ -18,11 +22,13 @@ public class ImagePickerViewController: UIViewController {
         }
     }
     
+    public weak var delegate: ImagePickerViewControllerDelegate?
+    
     private let columnCount: Int
     private let repository = PhotoRepository()
     
     private let maxSelectCount: Int = 10
-    private var selectedValues: [(selectCollectionViewIndexPath: IndexPath, image: UIImage)] = []
+    private var selectedValues: [(indexPath: IndexPath, image: UIImage)] = []
     
     init(columnCount: Int) {
         self.columnCount = columnCount
@@ -37,7 +43,8 @@ public class ImagePickerViewController: UIViewController {
     override public func viewDidLoad() {
         super.viewDidLoad()
         
-        let albumViewController = AlbumViewController(columnCount: columnCount)
+        let albumViewController = AlbumViewController(columnCount: columnCount,
+                                                      maxSelectCount: maxSelectCount)
         albumViewController.delegate = self
         addChild(albumViewController)
         albumViewController.view.overlay(on: selectContainerView)
@@ -45,7 +52,8 @@ public class ImagePickerViewController: UIViewController {
     }
 
     @IBAction func didTappedDoneBarButtonItem(_ sender: UIBarButtonItem) {
-//        let images = selectedValues.map { $0.image }
+        let images = selectedValues.map { $0.image }
+        delegate?.imagePickerViewController(self, didSelectedImages: images)
     }
     
     @IBAction func didRecognizedLongPressGesture(_ sender: UILongPressGestureRecognizer) {
@@ -117,82 +125,49 @@ extension ImagePickerViewController: UICollectionViewDelegateFlowLayout {
 }
 
 extension ImagePickerViewController: AlbumViewControllerDelegate {
-    func albumViewController(_ albumViewController: AlbumViewController,
-                             didSelectedItemAt indexPath: IndexPath,
-                             cell: SelectImageCollectionViewCell,
-                             image: UIImage) {
-        if selectedValues.count >= maxSelectCount && !cell.isSelectedState {
-            return
-        }
+    func albumViewController(_ albumViewController: AlbumViewController, didInsertedItemAt indexPath: IndexPath, selectedValues: [(indexPath: IndexPath, image: UIImage)]) {
+        self.selectedValues = selectedValues
         
-        let isSelected = cell.toggleState()
-        if isSelected {
-            let insertedIndexPath = append(image: image, at: indexPath)
-            
-            selectedCollectionView.selectItem(at: insertedIndexPath,
-                                              animated: true,
-                                              scrollPosition: .centeredHorizontally)
-        } else {
-            let removedIndexPath = remove(image: image, at: indexPath)
-            
-            if let indexPath = removedIndexPath {
-                selectedCollectionView.selectItem(at: indexPath,
-                                                  animated: true,
-                                                  scrollPosition: .right)
-            }
-        }
-    }
-    
-    private func append(image: UIImage, at selectCollectionViewIndexPath: IndexPath) -> IndexPath? {
-        let insertIndex = selectedValues.count
-        selectedValues.insert((selectCollectionViewIndexPath: selectCollectionViewIndexPath, image: image), at: insertIndex)
-        
-        let insertIndexPath = IndexPath(item: insertIndex, section: 0)
-        
-        let cell = getCell(at: insertIndexPath)
+        let cell = getCell(at: indexPath)
         UIView.transition(
             with: cell.imageView,
             duration: 0.3,
             options: .transitionCrossDissolve,
             animations: {
+                let image = selectedValues[indexPath.item].image
                 cell.configure(with: image)
-        },
+            },
             completion: { (finished) in
-        }
+                self.selectedCollectionView.selectItem(at: indexPath,
+                                                       animated: true,
+                                                       scrollPosition: .centeredHorizontally)
+            }
         )
-        
-        return insertIndexPath
     }
     
-    private func remove(image: UIImage, at selectCollectionViewIndexPath: IndexPath) -> IndexPath? {
-        let removeIndexPaths = selectedValues
-            .enumerated()
-            .filter { $0.element.selectCollectionViewIndexPath == selectCollectionViewIndexPath }
-            .map { IndexPath(item: $0.offset, section: 0) }
+    func albumViewController(_ albumViewController: AlbumViewController, didRemovedItemAt indexPath: IndexPath, selectedValues: [(indexPath: IndexPath, image: UIImage)]) {
+        self.selectedValues = selectedValues
         
-        guard let removeIndexPath = removeIndexPaths.first else { return nil }
-        
-        selectedValues.removeAll { $0.selectCollectionViewIndexPath == selectCollectionViewIndexPath }
-        
-        let cell = getCell(at: removeIndexPath)
+        let cell = getCell(at: indexPath)
         UIView.transition(
             with: cell.imageView,
             duration: 0.3,
             options: .transitionCrossDissolve,
             animations: {
                 cell.configureEmpty()
-        },
+            },
             completion: { (finished) in
                 self.selectedCollectionView.performBatchUpdates({
-                    let reloadRange = (removeIndexPath.item..<(self.selectedValues.count + 1))
+                    let reloadRange = (indexPath.item..<(self.selectedValues.count + 1))
                     let reloadIndexPaths = reloadRange.map { IndexPath(item: $0, section: 0) }
                     self.selectedCollectionView.reloadItems(at: reloadIndexPaths)
                 }, completion: { (finished) in
+                    self.selectedCollectionView.selectItem(at: indexPath,
+                                                           animated: true,
+                                                           scrollPosition: .right)
                 })
-        }
+            }
         )
-        
-        return removeIndexPath
     }
     
     private func getCell(at indexPath: IndexPath) -> SelectedImageCollectionViewCell {

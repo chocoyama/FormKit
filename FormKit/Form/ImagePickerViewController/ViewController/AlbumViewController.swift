@@ -11,9 +11,11 @@ import Photos
 
 protocol AlbumViewControllerDelegate: class {
     func albumViewController(_ albumViewController: AlbumViewController,
-                             didSelectedItemAt indexPath: IndexPath,
-                             cell: SelectImageCollectionViewCell,
-                             image: UIImage)
+                             didInsertedItemAt indexPath: IndexPath,
+                             selectedValues: [(indexPath: IndexPath, image: UIImage)])
+    func albumViewController(_ albumViewController: AlbumViewController,
+                             didRemovedItemAt indexPath: IndexPath,
+                             selectedValues: [(indexPath: IndexPath, image: UIImage)])
 }
 
 class AlbumViewController: UIViewController {
@@ -29,11 +31,14 @@ class AlbumViewController: UIViewController {
     private let columnCount: Int
     
     private var allAssets: PHFetchResult<PHAsset>?
+    private let maxSelectCount: Int
+    private var selectedValues: [(indexPath: IndexPath, image: UIImage)] = []
     
     weak var delegate: AlbumViewControllerDelegate?
     
-    init(columnCount: Int) {
+    init(columnCount: Int, maxSelectCount: Int) {
         self.columnCount = columnCount
+        self.maxSelectCount = maxSelectCount
         super.init(nibName: String(describing: AlbumViewController.self), bundle: .current)
     }
     
@@ -68,7 +73,43 @@ extension AlbumViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         guard let cell = collectionView.cellForItem(at: indexPath) as? SelectImageCollectionViewCell,
             let image = cell.imageView.image else { return }
-        delegate?.albumViewController(self, didSelectedItemAt: indexPath, cell: cell, image: image)
+        
+        if selectedValues.count >= maxSelectCount && !cell.isSelectedState {
+            return
+        }
+        
+        let isSelected = cell.toggleState()
+        if isSelected {
+            append(image: image, at: indexPath)
+        } else {
+            remove(image: image, at: indexPath)
+        }
+    }
+    
+    private func append(image: UIImage, at indexPath: IndexPath) {
+        let insertIndex = selectedValues.count
+        selectedValues.insert((indexPath: indexPath, image: image), at: insertIndex)
+        
+        let insertIndexPath = IndexPath(item: insertIndex, section: 0)
+        
+        delegate?.albumViewController(self,
+                                      didInsertedItemAt: insertIndexPath,
+                                      selectedValues: selectedValues)
+    }
+    
+    private func remove(image: UIImage, at indexPath: IndexPath) {
+        let removeIndexPaths = selectedValues
+            .enumerated()
+            .filter { $0.element.indexPath == indexPath }
+            .map { IndexPath(item: $0.offset, section: 0) }
+        
+        guard let removeIndexPath = removeIndexPaths.first else { return }
+        
+        selectedValues.removeAll { $0.indexPath == indexPath }
+        
+        delegate?.albumViewController(self,
+                                      didRemovedItemAt: removeIndexPath,
+                                      selectedValues: selectedValues)
     }
 }
 
