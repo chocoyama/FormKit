@@ -35,38 +35,29 @@ public class ImagePickerViewController: UIViewController {
     }
     @IBOutlet weak var menuStackView: UIStackView! {
         didSet {
-            Page.allCases
-                .map {
-                    let button = UIButton(type: .custom)
-                    button.setTitle($0.title, for: .normal)
-                    button.setTitleColor(.black, for: .normal)
-                    button.tag = $0.rawValue
-                    button.addTarget(self, action: #selector(self.didTappedMenuButton(sender:)), for: .touchUpInside)
-                    return button
-                }
-                .forEach {
-                    menuStackView.addArrangedSubview($0)
-                }
+            setUpMenuStackView()
         }
     }
     @IBOutlet weak var selectedIndicatorViewWidthConstraint: NSLayoutConstraint!
     @IBOutlet weak var selectedIndicatorViewLeftConstraint: NSLayoutConstraint!
+    
+    public weak var delegate: ImagePickerViewControllerDelegate?
+    private let columnCount: Int
+    private let maxSelectCount: Int
+    
+    private let pageVC: InfiniteLoopPageViewController
+    private let repository = PhotoRepository()
+    
+    private var selectedValues: [(indexPath: IndexPath, image: UIImage)] = []
+    
     private var menuItemWidth: CGFloat {
         return menuStackView.frame.width / CGFloat(Page.allCases.count)
     }
     
-    public weak var delegate: ImagePickerViewControllerDelegate?
-    
-    private let pageVC: InfiniteLoopPageViewController
-    
-    private let columnCount: Int
-    private let repository = PhotoRepository()
-    
-    private let maxSelectCount: Int = 10
-    private var selectedValues: [(indexPath: IndexPath, image: UIImage)] = []
-    
-    init(columnCount: Int) {
+    init(columnCount: Int, maxSelectCount: Int) {
         self.columnCount = columnCount
+        self.maxSelectCount = maxSelectCount
+        
         pageVC = InfiniteLoopPageViewController(
             totalPage: Page.allCases.count,
             shouldInfiniteLoop: false,
@@ -85,6 +76,15 @@ public class ImagePickerViewController: UIViewController {
     
     override public func viewDidLoad() {
         super.viewDidLoad()
+        setUpPageViewController()
+    }
+    
+    public override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        setUpSelectedIndicatorView()
+    }
+    
+    private func setUpPageViewController() {
         pageVC.pageableDataSource = self
         pageVC.loopPageDelegate = self
         addChild(pageVC)
@@ -92,14 +92,27 @@ public class ImagePickerViewController: UIViewController {
         pageVC.didMove(toParent: self)
     }
     
-    public override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
+    private func setUpMenuStackView() {
+        Page.allCases
+            .map {
+                let button = UIButton(type: .custom)
+                button.setTitle($0.title, for: .normal)
+                button.setTitleColor(.black, for: .normal)
+                button.tag = $0.rawValue
+                button.addTarget(self, action: #selector(self.didTappedMenuButton(sender:)), for: .touchUpInside)
+                return button
+            }
+            .forEach {
+                menuStackView.addArrangedSubview($0)
+            }
+    }
+    
+    private func setUpSelectedIndicatorView() {
         selectedIndicatorViewWidthConstraint.constant = menuItemWidth
     }
     
-    @objc func didTappedMenuButton(sender: UIButton) {
-        pageVC.moveTo(page: sender.tag, animated: true)
-        moveSelectedIndicator(to: sender.tag)
+    private func movePageView(to index: Int) {
+        pageVC.moveTo(page: index, animated: true)
     }
     
     private func moveSelectedIndicator(to index: Int) {
@@ -108,7 +121,15 @@ public class ImagePickerViewController: UIViewController {
             self.view.layoutIfNeeded()
         }
     }
+}
 
+// MARK:- User Action
+extension ImagePickerViewController {
+    @objc func didTappedMenuButton(sender: UIButton) {
+        movePageView(to: sender.tag)
+        moveSelectedIndicator(to: sender.tag)
+    }
+    
     @IBAction func didTappedDoneBarButtonItem(_ sender: UIBarButtonItem) {
         let images = selectedValues.map { $0.image }
         delegate?.imagePickerViewController(self, didSelectedImages: images)
@@ -137,6 +158,8 @@ public class ImagePickerViewController: UIViewController {
         }
     }
 }
+
+// MARK:- UICollectionView
 
 extension ImagePickerViewController: UICollectionViewDataSource {
     public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -182,11 +205,39 @@ extension ImagePickerViewController: UICollectionViewDelegateFlowLayout {
     }
 }
 
+// MARK: InfiniteLoopPageViewController
+
+extension ImagePickerViewController: PageableViewControllerDataSource {
+    func viewController(at index: Int, cache: PageCache) -> (UIViewController & Pageable)? {
+        if let cachedVC = cache.get(from: "\(index)") { return cachedVC }
+        
+        let page = Page.allCases[index]
+        let pageableVC: (UIViewController & Pageable)
+        switch page {
+        case .album:
+            let vc = AlbumViewController(columnCount: columnCount,
+                                         maxSelectCount: maxSelectCount)
+            vc.delegate = self
+            vc.pageNumber = page.rawValue
+            pageableVC = vc
+        case .camera:
+            let vc = CameraViewController()
+            vc.pageNumber = page.rawValue
+            pageableVC = vc
+        }
+        
+        cache.save(pageableVC, with: "\(index)")
+        return pageableVC
+    }
+}
+
 extension ImagePickerViewController: InfiniteLoopPageViewControllerDelegate {
     func infiniteLoopPageViewController(_ infiniteLoopPageViewController: InfiniteLoopPageViewController, didChangePageAt index: Int) {
         moveSelectedIndicator(to: index)
     }
 }
+
+// MARK: AlbumViewController
 
 extension ImagePickerViewController: AlbumViewControllerDelegate {
     func albumViewController(_ albumViewController: AlbumViewController, didInsertedItemAt indexPath: IndexPath, selectedValues: [(indexPath: IndexPath, image: UIImage)]) {
@@ -246,27 +297,4 @@ extension ImagePickerViewController: AlbumViewControllerDelegate {
     
 }
 
-extension ImagePickerViewController: PageableViewControllerDataSource {
-    func viewController(at index: Int, cache: PageCache) -> (UIViewController & Pageable)? {
-        if let cachedVC = cache.get(from: "\(index)") { return cachedVC }
-        
-        let page = Page.allCases[index]
-        let pageableVC: (UIViewController & Pageable)
-        switch page {
-        case .album:
-            let vc = AlbumViewController(columnCount: columnCount,
-                                         maxSelectCount: maxSelectCount)
-            vc.delegate = self
-            vc.pageNumber = page.rawValue
-            pageableVC = vc
-        case .camera:
-            let vc = CameraViewController()
-            vc.pageNumber = page.rawValue
-            pageableVC = vc
-        }
-        
-        cache.save(pageableVC, with: "\(index)")
-        return pageableVC
-    }
-}
 
