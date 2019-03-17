@@ -267,13 +267,12 @@ extension ImagePickerViewController: PageableViewControllerDataSource {
         let pageableVC: (UIViewController & Pageable)
         switch page {
         case .album:
-            let vc = CameraViewController()
-            vc.view.backgroundColor = .red
+            let vc = EmptyViewController()
             vc.pageNumber = page.rawValue
             pageableVC = vc
         case .camera:
-            let vc = CameraViewController()
-            vc.view.backgroundColor = .blue
+            let vc = CameraActionViewController()
+            vc.delegate = self as! CameraActionViewControllerDelegate
             vc.pageNumber = page.rawValue
             pageableVC = vc
         }
@@ -363,4 +362,8 @@ extension ImagePickerViewController: AlbumViewControllerDelegate {
     
 }
 
-
+extension ImagePickerViewController: CameraActionViewControllerDelegate {
+    public func cameraActionViewController(_ cameraActionViewController: CameraActionViewController, didTappedCameraView tapGesture: UITapGestureRecognizer) {
+        print("Fire!!")
+    }
+}
