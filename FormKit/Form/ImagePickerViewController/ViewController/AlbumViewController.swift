@@ -49,7 +49,6 @@ class AlbumViewController: UIViewController, Pageable {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         allAssets = repository.fetchAllPhotos()
     }
 

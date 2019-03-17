@@ -12,8 +12,11 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="ImagePickerViewController" customModule="FormKit" customModuleProvider="target">
             <connections>
+                <outlet property="menuStackView" destination="IRN-uf-h3F" id="l2S-4I-e5u"/>
                 <outlet property="selectContainerView" destination="eof-WD-z8J" id="2LW-WV-edt"/>
                 <outlet property="selectedCollectionView" destination="Fqx-Rc-ruc" id="tHv-f9-GUU"/>
+                <outlet property="selectedIndicatorViewLeftConstraint" destination="K8S-2s-tpZ" id="ai7-xi-7hq"/>
+                <outlet property="selectedIndicatorViewWidthConstraint" destination="jlZ-zv-lHS" id="YjK-pp-KYO"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
         </placeholder>
@@ -71,15 +74,34 @@
                         <outletCollection property="gestureRecognizers" destination="g9W-df-Mjh" appends="YES" id="SWk-dq-HX6"/>
                     </connections>
                 </collectionView>
+                <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="IRN-uf-h3F">
+                    <rect key="frame" x="0.0" y="625" width="375" height="40"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="40" id="eX2-3n-ni6"/>
+                    </constraints>
+                </stackView>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4EU-7P-pn4">
+                    <rect key="frame" x="0.0" y="665" width="0.0" height="2"/>
+                    <color key="backgroundColor" red="1" green="0.14913141730000001" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="2" id="C71-gF-dxj"/>
+                        <constraint firstAttribute="width" id="jlZ-zv-lHS"/>
+                    </constraints>
+                </view>
             </subviews>
             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
             <constraints>
                 <constraint firstItem="DX5-zs-w0u" firstAttribute="top" secondItem="v2d-Sh-rwD" secondAttribute="bottom" id="6UF-Pa-Z8K"/>
                 <constraint firstItem="Fqx-Rc-ruc" firstAttribute="top" secondItem="eof-WD-z8J" secondAttribute="bottom" id="Ceq-XX-sIH"/>
+                <constraint firstItem="4EU-7P-pn4" firstAttribute="top" secondItem="IRN-uf-h3F" secondAttribute="bottom" id="F1e-st-cja"/>
+                <constraint firstItem="IRN-uf-h3F" firstAttribute="trailing" secondItem="fnl-2z-Ty3" secondAttribute="trailing" id="GbE-Ro-YyF"/>
+                <constraint firstItem="4EU-7P-pn4" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="K8S-2s-tpZ"/>
                 <constraint firstItem="DX5-zs-w0u" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" id="TsZ-M7-STl"/>
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="Fqx-Rc-ruc" secondAttribute="trailing" id="Yof-eT-xlC"/>
                 <constraint firstItem="Fqx-Rc-ruc" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" id="aGR-XV-dvl"/>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="bottom" secondItem="4EU-7P-pn4" secondAttribute="bottom" id="aut-Ra-QYa"/>
                 <constraint firstItem="eof-WD-z8J" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" id="cXy-yt-cO0"/>
+                <constraint firstItem="IRN-uf-h3F" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" id="f6v-et-iDa"/>
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="DX5-zs-w0u" secondAttribute="trailing" id="fub-IZ-Z0e"/>
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="eof-WD-z8J" secondAttribute="trailing" id="gTc-DL-Ojz"/>
                 <constraint firstItem="v2d-Sh-rwD" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" id="hCQ-Ju-ybR"/>

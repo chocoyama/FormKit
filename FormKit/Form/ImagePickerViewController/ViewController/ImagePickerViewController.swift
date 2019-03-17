@@ -18,16 +18,46 @@ public class ImagePickerViewController: UIViewController {
     enum Page: Int, CaseIterable {
         case album
         case camera
+        
+        var title: String {
+            switch self {
+            case .album: return "アルバム"
+            case .camera: return "カメラ"
+            }
+        }
     }
-
+    
     @IBOutlet weak var selectContainerView: UIView!
     @IBOutlet weak var selectedCollectionView: UICollectionView! {
         didSet {
             SelectedImageCollectionViewCell.register(for: selectedCollectionView, bundle: .current)
         }
     }
+    @IBOutlet weak var menuStackView: UIStackView! {
+        didSet {
+            Page.allCases
+                .map {
+                    let button = UIButton(type: .custom)
+                    button.setTitle($0.title, for: .normal)
+                    button.setTitleColor(.black, for: .normal)
+                    button.tag = $0.rawValue
+                    button.addTarget(self, action: #selector(self.didTappedMenuButton(sender:)), for: .touchUpInside)
+                    return button
+                }
+                .forEach {
+                    menuStackView.addArrangedSubview($0)
+                }
+        }
+    }
+    @IBOutlet weak var selectedIndicatorViewWidthConstraint: NSLayoutConstraint!
+    @IBOutlet weak var selectedIndicatorViewLeftConstraint: NSLayoutConstraint!
+    private var menuItemWidth: CGFloat {
+        return menuStackView.frame.width / CGFloat(Page.allCases.count)
+    }
     
     public weak var delegate: ImagePickerViewControllerDelegate?
+    
+    private let pageVC: InfiniteLoopPageViewController
     
     private let columnCount: Int
     private let repository = PhotoRepository()
@@ -37,6 +67,14 @@ public class ImagePickerViewController: UIViewController {
     
     init(columnCount: Int) {
         self.columnCount = columnCount
+        pageVC = InfiniteLoopPageViewController(
+            totalPage: Page.allCases.count,
+            shouldInfiniteLoop: false,
+            transitionStyle: .scroll,
+            navigationOrientation: .horizontal,
+            options: nil
+        )
+        
         super.init(nibName: String(describing: ImagePickerViewController.self), bundle: .current)
         modalPresentationStyle = .overCurrentContext
     }
@@ -47,23 +85,37 @@ public class ImagePickerViewController: UIViewController {
     
     override public func viewDidLoad() {
         super.viewDidLoad()
-        
-        let pageVC = InfiniteLoopPageViewController(
-            totalPage: Page.allCases.count,
-            shouldInfiniteLoop: false,
-            transitionStyle: .scroll,
-            navigationOrientation: .horizontal,
-            options: nil
-        )
         pageVC.pageableDataSource = self
+        pageVC.loopPageDelegate = self
         addChild(pageVC)
         pageVC.view.overlay(on: selectContainerView)
         pageVC.didMove(toParent: self)
+    }
+    
+    public override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        selectedIndicatorViewWidthConstraint.constant = menuItemWidth
+    }
+    
+    @objc func didTappedMenuButton(sender: UIButton) {
+        pageVC.moveTo(page: sender.tag, animated: true)
+        moveSelectedIndicator(to: sender.tag)
+    }
+    
+    private func moveSelectedIndicator(to index: Int) {
+        selectedIndicatorViewLeftConstraint.constant = menuItemWidth * CGFloat(index)
+        UIView.animate(withDuration: 0.3) {
+            self.view.layoutIfNeeded()
+        }
     }
 
     @IBAction func didTappedDoneBarButtonItem(_ sender: UIBarButtonItem) {
         let images = selectedValues.map { $0.image }
         delegate?.imagePickerViewController(self, didSelectedImages: images)
+    }
+    
+    @IBAction func didTappedCancelBarButtonItem(_ sender: UIBarButtonItem) {
+        dismiss(animated: true, completion: nil)
     }
     
     @IBAction func didRecognizedLongPressGesture(_ sender: UILongPressGestureRecognizer) {
@@ -83,10 +135,6 @@ public class ImagePickerViewController: UIViewController {
         case .failed:
             break
         }
-    }
-    
-    @IBAction func didTappedCancelBarButtonItem(_ sender: UIBarButtonItem) {
-        dismiss(animated: true, completion: nil)
     }
 }
 
@@ -131,6 +179,12 @@ extension ImagePickerViewController: UICollectionViewDelegate {
 extension ImagePickerViewController: UICollectionViewDelegateFlowLayout {
     public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         return CGSize(width: 80, height: 80)
+    }
+}
+
+extension ImagePickerViewController: InfiniteLoopPageViewControllerDelegate {
+    func infiniteLoopPageViewController(_ infiniteLoopPageViewController: InfiniteLoopPageViewController, didChangePageAt index: Int) {
+        moveSelectedIndicator(to: index)
     }
 }
 
