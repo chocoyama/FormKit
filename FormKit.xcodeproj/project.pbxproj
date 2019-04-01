@@ -32,6 +32,7 @@
 		6B214E7D223E377100A7901E /* CameraActionViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6B214E7B223E377100A7901E /* CameraActionViewController.xib */; };
 		6B214E80223E37DA00A7901E /* EmptyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B214E7E223E37D900A7901E /* EmptyViewController.swift */; };
 		6B214E81223E37DA00A7901E /* EmptyViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6B214E7F223E37D900A7901E /* EmptyViewController.xib */; };
+		6B297841224908970004C2A7 /* Camera.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B297840224908970004C2A7 /* Camera.swift */; };
 		6B308EEE2222EBBD00E36DA7 /* FormKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B308EE42222EBBD00E36DA7 /* FormKit.framework */; };
 		6B308EF32222EBBD00E36DA7 /* FormKitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B308EF22222EBBD00E36DA7 /* FormKitTests.swift */; };
 		6B308EF52222EBBD00E36DA7 /* FormKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 6B308EE72222EBBD00E36DA7 /* FormKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -123,6 +124,7 @@
 		6B214E7B223E377100A7901E /* CameraActionViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CameraActionViewController.xib; sourceTree = "<group>"; };
 		6B214E7E223E37D900A7901E /* EmptyViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyViewController.swift; sourceTree = "<group>"; };
 		6B214E7F223E37D900A7901E /* EmptyViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = EmptyViewController.xib; sourceTree = "<group>"; };
+		6B297840224908970004C2A7 /* Camera.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Camera.swift; sourceTree = "<group>"; };
 		6B308EE42222EBBD00E36DA7 /* FormKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = FormKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		6B308EE72222EBBD00E36DA7 /* FormKit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FormKit.h; sourceTree = "<group>"; };
 		6B308EE82222EBBD00E36DA7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -214,6 +216,7 @@
 				6B214E4822329E9E00A7901E /* PhotoRepository.swift */,
 				6B214E562235F30900A7901E /* AssetsCacheable.swift */,
 				6B214E582235F38200A7901E /* AssetLoadable.swift */,
+				6B297840224908970004C2A7 /* Camera.swift */,
 			);
 			path = Helper;
 			sourceTree = "<group>";
@@ -636,6 +639,7 @@
 				6B214E66223DFA5E00A7901E /* AlbumViewController.swift in Sources */,
 				6B214E7C223E377100A7901E /* CameraActionViewController.swift in Sources */,
 				6B214E76223E0CA400A7901E /* CameraViewController.swift in Sources */,
+				6B297841224908970004C2A7 /* Camera.swift in Sources */,
 				6B214E602236308300A7901E /* SelectedImageCollectionViewCell.swift in Sources */,
 				6B424F382232946800CE1A23 /* ImagePickerField.swift in Sources */,
 				6B424F352230312A00CE1A23 /* Tag.swift in Sources */,

@@ -20,6 +20,8 @@
 	<string>1</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSCameraUsageDescription</key>
+	<string>画像撮影のためカメラにアクセスします</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>画像選択のためライブラリにアクセスします</string>
 	<key>UILaunchStoryboardName</key>

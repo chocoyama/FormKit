@@ -10,6 +10,7 @@ import UIKit
 
 public protocol CameraActionViewControllerDelegate: class {
     func cameraActionViewController(_ cameraActionViewController: CameraActionViewController, didTappedCameraView tapGesture: UITapGestureRecognizer)
+    func cameraActionViewController(_ cameraActionViewController: CameraActionViewController, didTappedReverseButton button: UIButton)
 }
 
 public class CameraActionViewController: UIViewController, Pageable {
@@ -36,5 +37,9 @@ public class CameraActionViewController: UIViewController, Pageable {
     
     @IBAction func didTappedCameraView(_ sender: UITapGestureRecognizer) {
         delegate?.cameraActionViewController(self, didTappedCameraView: sender)
+    }
+    
+    @IBAction func didTappedReverseButton(_ sender: UIButton) {
+        delegate?.cameraActionViewController(self, didTappedReverseButton: sender)
     }
 }

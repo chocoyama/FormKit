@@ -45,10 +45,14 @@ public class ImagePickerViewController: UIViewController {
     public weak var delegate: ImagePickerViewControllerDelegate?
     private let columnCount: Int
     private let maxSelectCount: Int
+    private let repository = PhotoRepository()
     
     private let mainPageVC: InfiniteLoopPageViewController
     private let subPageVC: InfiniteLoopPageViewController
-    private let repository = PhotoRepository()
+    private let albumVC: AlbumViewController
+    private let cameraVC = CameraViewController()
+    private let emptyVC = EmptyViewController()
+    private let cameraActionVC = CameraActionViewController()
     
     private var selectedValues: [(indexPath: IndexPath, image: UIImage)] = []
     
@@ -75,6 +79,9 @@ public class ImagePickerViewController: UIViewController {
             navigationOrientation: .horizontal,
             options: nil
         )
+        
+        albumVC = AlbumViewController(columnCount: columnCount,
+                                      maxSelectCount: maxSelectCount)
         
         super.init(nibName: String(describing: ImagePickerViewController.self), bundle: .current)
         modalPresentationStyle = .overCurrentContext
@@ -245,15 +252,12 @@ extension ImagePickerViewController: PageableViewControllerDataSource {
         let pageableVC: (UIViewController & Pageable)
         switch page {
         case .album:
-            let vc = AlbumViewController(columnCount: columnCount,
-                                         maxSelectCount: maxSelectCount)
-            vc.delegate = self
-            vc.pageNumber = page.rawValue
-            pageableVC = vc
+            albumVC.delegate = self
+            albumVC.pageNumber = page.rawValue
+            pageableVC = albumVC
         case .camera:
-            let vc = CameraViewController()
-            vc.pageNumber = page.rawValue
-            pageableVC = vc
+            cameraVC.pageNumber = page.rawValue
+            pageableVC = cameraVC
         }
         
         cache.save(pageableVC, with: "\(index)")
@@ -267,14 +271,12 @@ extension ImagePickerViewController: PageableViewControllerDataSource {
         let pageableVC: (UIViewController & Pageable)
         switch page {
         case .album:
-            let vc = EmptyViewController()
-            vc.pageNumber = page.rawValue
-            pageableVC = vc
+            emptyVC.pageNumber = page.rawValue
+            pageableVC = emptyVC
         case .camera:
-            let vc = CameraActionViewController()
-            vc.delegate = self as! CameraActionViewControllerDelegate
-            vc.pageNumber = page.rawValue
-            pageableVC = vc
+            cameraActionVC.delegate = self
+            cameraActionVC.pageNumber = page.rawValue
+            pageableVC = cameraActionVC
         }
         
         cache.save(pageableVC, with: "\(index)")
@@ -364,6 +366,10 @@ extension ImagePickerViewController: AlbumViewControllerDelegate {
 
 extension ImagePickerViewController: CameraActionViewControllerDelegate {
     public func cameraActionViewController(_ cameraActionViewController: CameraActionViewController, didTappedCameraView tapGesture: UITapGestureRecognizer) {
-        print("Fire!!")
+        cameraVC.capturePhoto()
+    }
+    
+    public func cameraActionViewController(_ cameraActionViewController: CameraActionViewController, didTappedReverseButton button: UIButton) {
+        cameraVC.reverseCamera()
     }
 }
