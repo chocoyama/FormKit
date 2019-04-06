@@ -32,6 +32,12 @@ class Camera: NSObject {
         resetOutput()
     }
     
+    func launch(on previewView: UIView) {
+        prepare()
+        set(to: previewView)
+        start()
+    }
+    
     func prepare() {
         createSession()
         setUpDevice()

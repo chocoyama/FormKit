@@ -46,9 +46,7 @@ class CameraViewController: UIViewController, Pageable {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         if !camera.isRunning {
-            camera.prepare()
-            camera.set(to: view)
-            camera.start()
+            camera.launch(on: view)
         }
     }
     
