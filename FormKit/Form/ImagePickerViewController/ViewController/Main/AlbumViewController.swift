@@ -78,7 +78,7 @@ extension AlbumViewController: UICollectionViewDelegate {
             return
         }
         
-        let isSelected = cell.toggleState()
+        let isSelected = cell.toggleSelectedState()
         if isSelected {
             append(image: image)
         } else {

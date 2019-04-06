@@ -11,6 +11,29 @@ import UIKit
 class SelectedImageCollectionViewCell: UICollectionViewCell {
 
     @IBOutlet weak var imageView: UIImageView!
+    @IBOutlet weak var imageViewRightConstraint: NSLayoutConstraint!
+    @IBOutlet weak var imageViewBottomConstraint: NSLayoutConstraint!
+    @IBOutlet weak var imageViewTopConstraint: NSLayoutConstraint!
+    @IBOutlet weak var imageViewLeftConstraint: NSLayoutConstraint!
+    private var imageViewConstraints: [NSLayoutConstraint?] {
+        return [
+            imageViewRightConstraint,
+            imageViewLeftConstraint,
+            imageViewTopConstraint,
+            imageViewBottomConstraint
+        ]
+    }
+    
+    override var isSelected: Bool {
+        didSet {
+            let constant: CGFloat = isSelected ? 3 : 0
+            imageViewConstraints.forEach { $0?.constant = constant }
+            UIView.animate(withDuration: 0.2) { [weak self] in
+                self?.contentView.layoutIfNeeded()
+            }
+
+        }
+    }
     
     @discardableResult
     func configure(with image: UIImage) -> Self {

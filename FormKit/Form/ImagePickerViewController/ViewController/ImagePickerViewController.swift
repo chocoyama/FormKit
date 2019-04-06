@@ -30,14 +30,13 @@ public class ImagePickerViewController: UIViewController {
     @IBOutlet weak var mainContainerView: UIView!
     @IBOutlet weak var subContainerView: UIView!
     @IBOutlet weak var selectedCollectionView: UICollectionView! {
-        didSet {
-            SelectedImageCollectionViewCell.register(for: selectedCollectionView, bundle: .current)
-        }
+        didSet { SelectedImageCollectionViewCell.register(for: selectedCollectionView, bundle: .current) }
     }
     @IBOutlet weak var menuStackView: UIStackView! {
-        didSet {
-            setUpMenuStackView()
-        }
+        didSet { setUpMenuStackView() }
+    }
+    @IBOutlet weak var previewImageView: UIImageView! {
+        didSet { updatePreviewImageView(isHidden: true, animated: false) }
     }
     @IBOutlet weak var selectedIndicatorViewWidthConstraint: NSLayoutConstraint!
     @IBOutlet weak var selectedIndicatorViewLeftConstraint: NSLayoutConstraint!
@@ -227,6 +226,28 @@ extension ImagePickerViewController: UICollectionViewDataSource {
 }
 
 extension ImagePickerViewController: UICollectionViewDelegate {
+    public func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
+        let tappedSelectedItem = collectionView.indexPathsForSelectedItems?.contains(indexPath) == true
+        if tappedSelectedItem {
+            collectionView.deselectItem(at: indexPath, animated: true)
+            updatePreviewImageView(isHidden: true, animated: true)
+            return false
+        }
+        return true
+    }
+    
+    public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        previewImageView.image = images[indexPath.item]
+        updatePreviewImageView(isHidden: false, animated: true)
+    }
+    
+    private func updatePreviewImageView(isHidden: Bool, animated: Bool) {
+        let duration = animated ? 0.3 : 0.0
+        let alpha: CGFloat = isHidden ? 0.0 : 1.0
+        UIView.animate(withDuration: duration) {
+            self.previewImageView.alpha = alpha
+        }
+    }
 }
 
 extension ImagePickerViewController: UICollectionViewDelegateFlowLayout {
@@ -348,9 +369,9 @@ extension ImagePickerViewController: AlbumViewControllerDelegate {
             let reloadIndexPaths = (0..<self.maxSelectCount).map { IndexPath(item: $0, section: 0) }
             self.selectedCollectionView.reloadItems(at: reloadIndexPaths)
         }, completion: { (finished) in
-            self.selectedCollectionView.selectItem(at: indexPath,
-                                                   animated: true,
-                                                   scrollPosition: .centeredHorizontally)
+            self.selectedCollectionView.scrollToItem(at: indexPath,
+                                                     at: .centeredHorizontally,
+                                                     animated: true)
         })
     }
     
