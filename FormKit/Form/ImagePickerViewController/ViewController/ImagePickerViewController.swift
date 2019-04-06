@@ -184,6 +184,8 @@ extension ImagePickerViewController {
             selectedCollectionView.endInteractiveMovement()
         case .failed:
             break
+        @unknown default:
+            fatalError()
         }
     }
 }

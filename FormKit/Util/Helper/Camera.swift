@@ -9,7 +9,7 @@
 import Foundation
 import AVFoundation
 
-class Camera {
+class Camera: NSObject {
     private let settings: Settings
     
     private var session: AVCaptureSession?
@@ -57,11 +57,24 @@ class Camera {
         session?.stopRunning()
     }
     
+    func capture() {
+        currentPhotoOutput?.capturePhoto(with: settings.output.captureSettings,
+                                         delegate: self)
+    }
+    
     func reverse() {
         if let session = session, let reversedDevice = device?.reverse() {
             resetInput()
             setUpInput(for: session, with: reversedDevice)
         }
+    }
+}
+
+extension Camera: AVCapturePhotoCaptureDelegate {
+    func photoOutput(_ output: AVCapturePhotoOutput, didFinishProcessingPhoto photo: AVCapturePhoto, error: Error?) {
+        guard let imageData = photo.fileDataRepresentation(),
+            let image = UIImage(data: imageData) else { return }
+        UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil)
     }
 }
 
@@ -102,7 +115,7 @@ extension Camera {
     private func setUpPhotoOutput(for session: AVCaptureSession,
                                   completionHandler: ((Bool, Error?) -> Void)?) {
         let photoOutput = AVCapturePhotoOutput()
-        photoOutput.setPreparedPhotoSettingsArray(settings.output.photoSettings, completionHandler: completionHandler)
+        photoOutput.setPreparedPhotoSettingsArray(settings.output.preparedPhotoSettingsArray, completionHandler: completionHandler)
         if session.canAddOutput(photoOutput) {
             session.addOutput(photoOutput)
         }
@@ -136,7 +149,8 @@ extension Camera {
         }
         
         struct Output {
-            let photoSettings: [AVCapturePhotoSettings]
+            let preparedPhotoSettingsArray: [AVCapturePhotoSettings]
+            let captureSettings: AVCapturePhotoSettings
         }
         
         struct Layer {
@@ -168,6 +182,7 @@ extension Camera {
                 case .unspecified: break
                 case .back: back = $0
                 case .front: front = $0
+                @unknown default: fatalError()
                 }
             }
             

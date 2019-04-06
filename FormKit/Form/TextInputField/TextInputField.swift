@@ -21,6 +21,7 @@ public class TextInputField: UIView, XibInitializable {
             switch stackView.axis {
             case .horizontal: stackView.alignment = .top
             case .vertical: stackView.alignment = .fill
+            @unknown default: fatalError()
             }
         }
     }

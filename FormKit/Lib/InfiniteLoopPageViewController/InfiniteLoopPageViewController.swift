@@ -71,7 +71,7 @@ class InfiniteLoopPageViewController: UIPageViewController {
 extension InfiniteLoopPageViewController {
     func getIndex(at viewController: UIViewController) -> Int? {
         guard let currentVC = viewController as? Pageable else { return nil }
-        return pages.index { $0.number == currentVC.pageNumber }
+        return pages.firstIndex { $0.number == currentVC.pageNumber }
     }
     
     func getViewController(at index: Int) -> UIViewController? {

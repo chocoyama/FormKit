@@ -14,7 +14,7 @@ public protocol Tag {
 }
 
 public extension UIView {
-    public func setTag(_ tag: Tag) {
+    func setTag(_ tag: Tag) {
         self.tag = tag.value
     }
 }

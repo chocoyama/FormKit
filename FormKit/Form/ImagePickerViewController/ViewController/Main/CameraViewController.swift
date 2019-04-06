@@ -23,7 +23,15 @@ class CameraViewController: UIViewController, Pageable {
             preferredPosition: .front
         ),
         output: .init(
-            photoSettings: [AVCapturePhotoSettings(format: [AVVideoCodecKey : AVVideoCodecType.jpeg])]
+            preparedPhotoSettingsArray: [
+                AVCapturePhotoSettings(format: [AVVideoCodecKey : AVVideoCodecType.jpeg])
+            ],
+            captureSettings: {
+                let settings = AVCapturePhotoSettings()
+                settings.flashMode = .auto
+                settings.isAutoStillImageStabilizationEnabled = true
+                return settings
+            }()
         ),
         layer: .init(
             videoGravity: .resizeAspectFill,
@@ -45,7 +53,7 @@ class CameraViewController: UIViewController, Pageable {
     }
     
     func capturePhoto() {
-        
+        camera.capture()
     }
     
     func reverseCamera() {
