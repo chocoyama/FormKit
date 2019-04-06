@@ -13,19 +13,30 @@ class Camera {
     private let settings: Settings
     
     private var session: AVCaptureSession?
-    private var device: Device
+    private var device: Device?
     private var previewLayer: AVCaptureVideoPreviewLayer?
+    private var currentInput: AVCaptureDeviceInput?
+    private var currentPhotoOutput: AVCapturePhotoOutput?
+    
+    var isRunning: Bool {
+        return session?.isRunning ?? false
+    }
     
     init(settings: Settings) {
         self.settings = settings
-        self.device = Device()
+    }
+    
+    deinit {
+        stop()
+        resetInput()
+        resetOutput()
     }
     
     func prepare() {
         createSession()
         setUpDevice()
         
-        if let session = session, let device = getInitialDevice() {
+        if let session = session, let device = device?.current {
             setUpInput(for: session, with: device)
             setUpPhotoOutput(for: session, completionHandler: nil)
             setUpPreviewLayer(for: session)
@@ -45,6 +56,13 @@ class Camera {
     func stop() {
         session?.stopRunning()
     }
+    
+    func reverse() {
+        if let session = session, let reversedDevice = device?.reverse() {
+            resetInput()
+            setUpInput(for: session, with: reversedDevice)
+        }
+    }
 }
 
 extension Camera {
@@ -59,24 +77,8 @@ extension Camera {
             mediaType: settings.input.mediaType,
             position: settings.input.position
         )
-        
-        discoverySession.devices.forEach {
-            switch $0.position {
-            case .unspecified: break
-            case .back: device.back = $0
-            case .front: device.front = $0
-            }
-        }
-    }
-    
-    private func getInitialDevice() -> AVCaptureDevice? {
-        if let preferredDevice = device.get(position: settings.input.preferredPosition) {
-            return preferredDevice
-        } else if let current = device.current {
-            return current
-        } else {
-            return nil
-        }
+        device = Device(devices: discoverySession.devices,
+                        preferredPosition: .back)
     }
     
     private func setUpInput(for session: AVCaptureSession, with device: AVCaptureDevice) {
@@ -85,9 +87,16 @@ extension Camera {
             if session.canAddInput(input) {
                 session.addInput(input)
             }
+            currentInput = input
         } catch let error {
             print(error)
         }
+    }
+    
+    private func resetInput() {
+        guard let input = currentInput else { return }
+        session?.removeInput(input)
+        currentInput = nil
     }
     
     private func setUpPhotoOutput(for session: AVCaptureSession,
@@ -97,6 +106,13 @@ extension Camera {
         if session.canAddOutput(photoOutput) {
             session.addOutput(photoOutput)
         }
+        currentPhotoOutput = photoOutput
+    }
+    
+    private func resetOutput() {
+        guard let output = currentPhotoOutput else { return }
+        session?.removeOutput(output)
+        currentPhotoOutput = nil
     }
     
     private func setUpPreviewLayer(for session: AVCaptureSession) {
@@ -140,17 +156,40 @@ extension Camera {
             case front
         }
         
-        fileprivate var back: AVCaptureDevice?
-        fileprivate var front: AVCaptureDevice?
+        fileprivate let back: AVCaptureDevice?
+        fileprivate let front: AVCaptureDevice?
+        private(set) var current: AVCaptureDevice?
         
-        var current: AVCaptureDevice? {
-            if let back = back {
-                return back
-            } else if let front = front {
-                return front
-            } else {
-                return nil
+        init(devices: [AVCaptureDevice], preferredPosition: Position) {
+            var back: AVCaptureDevice?
+            var front: AVCaptureDevice?
+            devices.forEach {
+                switch $0.position {
+                case .unspecified: break
+                case .back: back = $0
+                case .front: front = $0
+                }
             }
+            
+            self.back = back
+            self.front = front
+            
+            if let prefferedDevice = get(position: preferredPosition) {
+                current = prefferedDevice
+            } else if let back = get(position: .back) {
+                current = back
+            } else if let front = get(position: .front)  {
+                current = front
+            }
+        }
+        
+        mutating func reverse() -> AVCaptureDevice? {
+            if current == back {
+                current = front
+            } else if current == front {
+                current = back
+            }
+            return current
         }
         
         func get(position: Position) -> AVCaptureDevice? {

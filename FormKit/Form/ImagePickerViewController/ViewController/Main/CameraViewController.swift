@@ -33,9 +33,15 @@ class CameraViewController: UIViewController, Pageable {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        camera.prepare()
-        camera.set(to: view)
-        camera.start()
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        if !camera.isRunning {
+            camera.prepare()
+            camera.set(to: view)
+            camera.start()
+        }
     }
     
     func capturePhoto() {
@@ -43,6 +49,6 @@ class CameraViewController: UIViewController, Pageable {
     }
     
     func reverseCamera() {
-        
+        camera.reverse()
     }
 }
