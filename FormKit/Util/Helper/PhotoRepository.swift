@@ -13,7 +13,9 @@ public class PhotoRepository {
     
     private var allPhotoOptions: PHFetchOptions {
         let allPhotoOptions = PHFetchOptions()
-        allPhotoOptions.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: true)]
+        allPhotoOptions.sortDescriptors = [
+            NSSortDescriptor(key: "creationDate", ascending: false)
+        ]
         return allPhotoOptions
     }
     

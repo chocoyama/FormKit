@@ -9,8 +9,14 @@
 import UIKit
 import AVFoundation
 
+protocol CameraViewControllerDelegate: class {
+    func cameraViewController(_ cameraViewController: CameraViewController, didCapturedImage image: UIImage)
+}
+
 class CameraViewController: UIViewController, Pageable {
     var pageNumber = 0
+    
+    weak var delegate: CameraViewControllerDelegate?
     
     let camera = Camera(settings: .init(
         session: .init(
@@ -51,7 +57,15 @@ class CameraViewController: UIViewController, Pageable {
     }
     
     func capturePhoto() {
-        camera.capture()
+        camera.capture { [weak self] result in
+            guard let self = self else { return }
+            switch result {
+            case .success(let image):
+                self.delegate?.cameraViewController(self, didCapturedImage: image)
+            case .failure:
+                break
+            }
+        }
     }
     
     func reverseCamera() {

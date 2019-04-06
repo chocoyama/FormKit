@@ -17,6 +17,7 @@ class Camera: NSObject {
     private var previewLayer: AVCaptureVideoPreviewLayer?
     private var currentInput: AVCaptureDeviceInput?
     private var currentPhotoOutput: AVCapturePhotoOutput?
+    private var captureHandler: ((Result<UIImage, Error>) -> Void)?
     
     var isRunning: Bool {
         return session?.isRunning ?? false
@@ -29,7 +30,7 @@ class Camera: NSObject {
     deinit {
         stop()
         resetInput()
-        resetOutput()
+        resetPhotoOutput()
     }
     
     func launch(on previewView: UIView) {
@@ -56,6 +57,7 @@ class Camera: NSObject {
     }
     
     func start() {
+        guard device?.isReady == true else { return }
         session?.startRunning()
     }
     
@@ -63,9 +65,13 @@ class Camera: NSObject {
         session?.stopRunning()
     }
     
-    func capture() {
+    func capture(handler: @escaping (Result<UIImage, Error>) -> Void) {
+        guard let session = session else { return }
+        captureHandler = handler
         currentPhotoOutput?.capturePhoto(with: settings.output.captureSettings,
                                          delegate: self)
+        resetPhotoOutput()
+        setUpPhotoOutput(for: session, completionHandler: nil)
     }
     
     func reverse() {
@@ -78,9 +84,18 @@ class Camera: NSObject {
 
 extension Camera: AVCapturePhotoCaptureDelegate {
     func photoOutput(_ output: AVCapturePhotoOutput, didFinishProcessingPhoto photo: AVCapturePhoto, error: Error?) {
+        if let error = error {
+            captureHandler?(.failure(CameraError.capture(error)))
+            return
+        }
+        
         guard let imageData = photo.fileDataRepresentation(),
-            let image = UIImage(data: imageData) else { return }
+            let image = UIImage(data: imageData) else {
+                captureHandler?(.failure(CameraError.imageConvert))
+                return
+        }
         UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil)
+        captureHandler?(.success(image))
     }
 }
 
@@ -128,7 +143,7 @@ extension Camera {
         currentPhotoOutput = photoOutput
     }
     
-    private func resetOutput() {
+    private func resetPhotoOutput() {
         guard let output = currentPhotoOutput else { return }
         session?.removeOutput(output)
         currentPhotoOutput = nil
@@ -180,6 +195,10 @@ extension Camera {
         fileprivate let front: AVCaptureDevice?
         private(set) var current: AVCaptureDevice?
         
+        var isReady: Bool {
+            return current != nil
+        }
+        
         init(devices: [AVCaptureDevice], preferredPosition: Position) {
             var back: AVCaptureDevice?
             var front: AVCaptureDevice?
@@ -220,4 +239,9 @@ extension Camera {
             }
         }
     }
+}
+
+public enum CameraError: Error {
+    case capture(Error)
+    case imageConvert
 }
