@@ -34,6 +34,7 @@ public class ImagePickerField: UIView, XibInitializable {
     }
     
     public weak var delegate: ImagePickerFieldDelegate?
+    private var images: [UIImage] = []
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
@@ -44,6 +45,11 @@ public class ImagePickerField: UIView, XibInitializable {
         super.init(frame: frame)
         setXibView()
     }
+    
+    public func set(_ images: [UIImage]) {
+        self.images = images
+        collectionView.reloadData()
+    }
 }
 
 extension ImagePickerField: UICollectionViewDataSource {
@@ -52,11 +58,15 @@ extension ImagePickerField: UICollectionViewDataSource {
     }
     
     public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        return ImagePickerFieldCollectionViewCell
+        let cell = ImagePickerFieldCollectionViewCell
             .dequeue(from: collectionView, indexPath: indexPath)
-            .configure(with: .init(borderWidth: borderWidth,
-                                   borderColor: borderColor,
-                                   isBlackStyle: blackStyle))
+        if indexPath.item <= images.count - 1 {
+            return cell.configure(with: images[indexPath.item])
+        } else {
+            return cell.configure(with: .init(borderWidth: borderWidth,
+                                              borderColor: borderColor,
+                                              isBlackStyle: blackStyle))
+        }
     }
 }
 

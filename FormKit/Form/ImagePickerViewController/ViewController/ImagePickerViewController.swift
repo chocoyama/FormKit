@@ -174,6 +174,7 @@ extension ImagePickerViewController {
     @IBAction func didTappedDoneBarButtonItem(_ sender: UIBarButtonItem) {
         let images = pickedImages.map { $0.image }
         delegate?.imagePickerViewController(self, didSelectedImages: images)
+        dismiss(animated: true, completion: nil)
     }
     
     @IBAction func didTappedCancelBarButtonItem(_ sender: UIBarButtonItem) {

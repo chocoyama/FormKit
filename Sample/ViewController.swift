@@ -138,12 +138,21 @@ extension ViewController: SelectedFieldDelegate {
 
 extension ViewController: ImagePickerFieldDelegate {
     func imagePickerField(_ imagePickerField: ImagePickerField, didSelectAt indexPath: IndexPath, with imagePickerViewController: ImagePickerViewController) {
+        imagePickerViewController.delegate = self
         present(imagePickerViewController, animated: true, completion: nil)
+    }
+}
+
+extension ViewController: ImagePickerViewControllerDelegate {
+    func imagePickerViewController(_ imagePickerViewController: ImagePickerViewController, didSelectedImages images: [UIImage]) {
+        userRegistrationForm.images = images
+        imagePickerField?.set(images)
     }
 }
 
 extension ViewController {
     struct UserRegistrationForm {
+        var images: [UIImage]?
         var lastName: String?
         var firstName: String?
         var postalCode: String?
@@ -154,7 +163,8 @@ extension ViewController {
         var phoneNumber: String?
         
         var isValid: Bool {
-            return lastName?.isEmpty == false
+            return images?.isEmpty == false
+                && lastName?.isEmpty == false
                 && firstName?.isEmpty == false
                 && postalCode?.isEmpty == false
                 && prefecture?.isEmpty == false
