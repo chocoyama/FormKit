@@ -12,10 +12,10 @@ import Photos
 protocol AlbumViewControllerDelegate: class {
     func albumViewController(_ albumViewController: AlbumViewController,
                              didInsertedItemAt indexPath: IndexPath,
-                             selectedImages: [UIImage])
+                             selectedImages: [PickedImage])
     func albumViewController(_ albumViewController: AlbumViewController,
                              didRemovedItemAt indexPath: IndexPath,
-                             selectedImages: [UIImage])
+                             selectedImages: [PickedImage])
 }
 
 class AlbumViewController: UIViewController, Pageable {
@@ -24,6 +24,7 @@ class AlbumViewController: UIViewController, Pageable {
         didSet {
             SelectImageCollectionViewCell.register(for: collectionView, bundle: .current)
             collectionView.dataSource = self
+            collectionView.allowsMultipleSelection = true
         }
     }
     
@@ -33,7 +34,7 @@ class AlbumViewController: UIViewController, Pageable {
     
     private var allAssets: PHFetchResult<PHAsset>?
     private let maxSelectCount: Int
-    private var selectedImages = [UIImage]()
+    private var selectedImages = [PickedImage]()
     
     weak var delegate: AlbumViewControllerDelegate?
     
@@ -66,45 +67,51 @@ extension AlbumViewController: UICollectionViewDataSource {
             .configure(with: asset)
     }
     
-    
 }
 
 extension AlbumViewController: UICollectionViewDelegate {
+    func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
+        return selectedImages.count <= maxSelectCount - 1
+    }
+    
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         guard let cell = collectionView.cellForItem(at: indexPath) as? SelectImageCollectionViewCell,
             let image = cell.imageView.image else { return }
-        
-        if selectedImages.count >= maxSelectCount && !cell.isSelectedState {
-            return
-        }
-        
-        let isSelected = cell.toggleSelectedState()
-        if isSelected {
-            append(image: image)
-        } else {
-            remove(image: image, at: indexPath)
-        }
+        append(pickedImage: PickedImage(image: image,
+                                        albumIndexPath: indexPath))
     }
     
-    func append(image: UIImage) {
+    func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
+        guard let cell = collectionView.cellForItem(at: indexPath) as? SelectImageCollectionViewCell,
+            let image = cell.imageView.image else { return }
+        remove(pickedImage: PickedImage(image: image,
+                                        albumIndexPath: indexPath))
+    }
+    
+    func append(pickedImage: PickedImage) {
         let insertIndexPath = IndexPath(item: selectedImages.count, section: 0)
         
-        selectedImages.insert(image, at: insertIndexPath.item)
+        selectedImages.insert(pickedImage, at: insertIndexPath.item)
         
         delegate?.albumViewController(self,
                                       didInsertedItemAt: insertIndexPath,
                                       selectedImages: selectedImages)
     }
     
-    private func remove(image: UIImage, at indexPath: IndexPath) {
+    func remove(pickedImage: PickedImage) {
         let removeIndexPaths = selectedImages
             .enumerated()
-            .filter { $0.element == image }
+            .filter { $0.element.image == pickedImage.image }
             .map { IndexPath(item: $0.offset, section: 0) }
         
         guard let removeIndexPath = removeIndexPaths.first else { return }
         
-        selectedImages.removeAll { $0 == image }
+        selectedImages.removeAll { $0.image == pickedImage.image }
+        
+        if let albumIndexPath = pickedImage.albumIndexPath,
+            collectionView.indexPathsForSelectedItems?.contains(albumIndexPath) == true {
+            collectionView.deselectItem(at: albumIndexPath, animated: true)
+        }
         
         delegate?.albumViewController(self,
                                       didRemovedItemAt: removeIndexPath,

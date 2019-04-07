@@ -36,10 +36,13 @@ class SelectImageCollectionViewCell: UICollectionViewCell, AssetLoadable {
         ]
     }
     
-    var isSelectedState: Bool = false {
+    override var isSelected: Bool {
         didSet {
-            let constant: CGFloat = isSelectedState ? 3 : 0
+            let constant: CGFloat = isSelected ? 3 : 0
             imageViewConstraints.forEach { $0?.constant = constant }
+            UIView.animate(withDuration: 0.2) { [weak self] in
+                self?.contentView.layoutIfNeeded()
+            }
         }
     }
     
@@ -59,16 +62,7 @@ class SelectImageCollectionViewCell: UICollectionViewCell, AssetLoadable {
     
     @discardableResult
     func configure(with asset: PHAsset) -> Self {
-        isSelectedState = false
         load(asset)
         return self
-    }
-    
-    func toggleSelectedState() -> Bool {
-        isSelectedState = !isSelectedState
-        UIView.animate(withDuration: 0.2) { [weak self] in
-            self?.contentView.layoutIfNeeded()
-        }
-        return isSelectedState
     }
 }
