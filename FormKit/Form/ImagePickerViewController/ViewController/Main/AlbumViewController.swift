@@ -34,13 +34,14 @@ class AlbumViewController: UIViewController, Pageable {
     
     private var allAssets: PHFetchResult<PHAsset>?
     private let maxSelectCount: Int
-    private var selectedImages = [PickedImage]()
+    private var pickedImages = [PickedImage]()
     
     weak var delegate: AlbumViewControllerDelegate?
     
-    init(columnCount: Int, maxSelectCount: Int) {
+    init(columnCount: Int, maxSelectCount: Int, pickedImages: [PickedImage]) {
         self.columnCount = columnCount
         self.maxSelectCount = maxSelectCount
+        self.pickedImages = pickedImages
         super.init(nibName: String(describing: AlbumViewController.self), bundle: .current)
     }
     
@@ -62,6 +63,10 @@ extension AlbumViewController: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let asset = allAssets?.object(at: indexPath.item) else { fatalError() }
+        let hasPicked = pickedImages.compactMap { $0.albumIndexPath }.contains(indexPath)
+        if hasPicked {
+            collectionView.selectItem(at: indexPath, animated: false, scrollPosition: [])
+        }
         return SelectImageCollectionViewCell
             .dequeue(from: collectionView, indexPath: indexPath)
             .configure(with: asset)
@@ -71,7 +76,7 @@ extension AlbumViewController: UICollectionViewDataSource {
 
 extension AlbumViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
-        return selectedImages.count <= maxSelectCount - 1
+        return pickedImages.count <= maxSelectCount - 1
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
@@ -89,24 +94,24 @@ extension AlbumViewController: UICollectionViewDelegate {
     }
     
     func append(pickedImage: PickedImage) {
-        let insertIndexPath = IndexPath(item: selectedImages.count, section: 0)
+        let insertIndexPath = IndexPath(item: pickedImages.count, section: 0)
         
-        selectedImages.insert(pickedImage, at: insertIndexPath.item)
+        pickedImages.insert(pickedImage, at: insertIndexPath.item)
         
         delegate?.albumViewController(self,
                                       didInsertedItemAt: insertIndexPath,
-                                      selectedImages: selectedImages)
+                                      selectedImages: pickedImages)
     }
     
     func remove(pickedImage: PickedImage) {
-        let removeIndexPaths = selectedImages
+        let removeIndexPaths = pickedImages
             .enumerated()
-            .filter { $0.element.image == pickedImage.image }
+            .filter { $0.element.albumIndexPath == pickedImage.albumIndexPath }
             .map { IndexPath(item: $0.offset, section: 0) }
         
         guard let removeIndexPath = removeIndexPaths.first else { return }
         
-        selectedImages.removeAll { $0.image == pickedImage.image }
+        pickedImages.removeAll { $0.albumIndexPath == pickedImage.albumIndexPath }
         
         if let albumIndexPath = pickedImage.albumIndexPath,
             collectionView.indexPathsForSelectedItems?.contains(albumIndexPath) == true {
@@ -115,7 +120,7 @@ extension AlbumViewController: UICollectionViewDelegate {
         
         delegate?.albumViewController(self,
                                       didRemovedItemAt: removeIndexPath,
-                                      selectedImages: selectedImages)
+                                      selectedImages: pickedImages)
     }
 }
 

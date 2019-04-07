@@ -9,13 +9,13 @@
 import UIKit
 import Photos
 
-public struct PickedImage {
+public struct PickedImage: Equatable {
     public let image: UIImage
-    public let albumIndexPath: IndexPath?
+    let albumIndexPath: IndexPath?
 }
 
 public protocol ImagePickerViewControllerDelegate: class {
-    func imagePickerViewController(_ imagePickerViewController: ImagePickerViewController, didSelectedImages images: [UIImage])
+    func imagePickerViewController(_ imagePickerViewController: ImagePickerViewController, didSelectedImages images: [PickedImage])
 }
 
 public class ImagePickerViewController: UIViewController {
@@ -72,9 +72,10 @@ public class ImagePickerViewController: UIViewController {
         return menuStackView.frame.width / CGFloat(Page.allCases.count)
     }
     
-    init(columnCount: Int, maxSelectCount: Int) {
+    init(columnCount: Int, maxSelectCount: Int, pickedImages: [PickedImage]) {
         self.columnCount = columnCount
         self.maxSelectCount = maxSelectCount
+        self.pickedImages = pickedImages
         
         mainPageVC = InfiniteLoopPageViewController(
             totalPage: Page.allCases.count,
@@ -93,7 +94,8 @@ public class ImagePickerViewController: UIViewController {
         )
         
         albumVC = AlbumViewController(columnCount: columnCount,
-                                      maxSelectCount: maxSelectCount)
+                                      maxSelectCount: maxSelectCount,
+                                      pickedImages: pickedImages)
         
         super.init(nibName: String(describing: ImagePickerViewController.self), bundle: .current)
         modalPresentationStyle = .overCurrentContext
@@ -172,8 +174,7 @@ extension ImagePickerViewController {
     }
     
     @IBAction func didTappedDoneBarButtonItem(_ sender: UIBarButtonItem) {
-        let images = pickedImages.map { $0.image }
-        delegate?.imagePickerViewController(self, didSelectedImages: images)
+        delegate?.imagePickerViewController(self, didSelectedImages: pickedImages)
         dismiss(animated: true, completion: nil)
     }
     
