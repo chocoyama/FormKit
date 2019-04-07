@@ -59,8 +59,11 @@ public class ImagePickerViewController: UIViewController {
     private let cameraActionVC = CameraActionViewController()
     
     private var pickedImages = [PickedImage]()
+    private var timer: Timer?
     private var canDelete = false {
         didSet {
+            timer?.invalidate()
+            timer = nil
             selectedCollectionView.reloadData()
         }
     }
@@ -185,15 +188,20 @@ extension ImagePickerViewController {
             break
         case .began:
             if let indexPath = selectedCollectionView.indexPathForItem(at: pressedPoint) {
-//                canDelete.toggle()
-                selectedCollectionView.beginInteractiveMovementForItem(at: indexPath)
+                canDelete = true
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                    self.selectedCollectionView.beginInteractiveMovementForItem(at: indexPath)
+                }
             }
         case .changed:
             selectedCollectionView.updateInteractiveMovementTargetPosition(pressedPoint)
-        case .ended:
+        case .ended, .cancelled:
             selectedCollectionView.endInteractiveMovement()
-        case .cancelled:
-            selectedCollectionView.endInteractiveMovement()
+            if canDelete {
+                timer = Timer.scheduledTimer(withTimeInterval: 3.0, repeats: false) { [weak self] (timer) in
+                    self?.canDelete = false
+                }
+            }
         case .failed:
             break
         @unknown default:
