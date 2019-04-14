@@ -51,9 +51,9 @@ class AlbumViewController: UIViewController, Pageable {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        repository.register(observer: self)
         allAssets = repository.fetchAllPhotos()
     }
-
 }
 
 extension AlbumViewController: UICollectionViewDataSource {
@@ -137,5 +137,34 @@ extension AlbumViewController: UICollectionViewDelegateFlowLayout {
         
         let itemWidth = (screenWidth - totalMargin) / columnCount
         return CGSize(width: itemWidth, height: itemWidth)
+    }
+}
+
+extension AlbumViewController: PHPhotoLibraryChangeObserver {
+    func photoLibraryDidChange(_ changeInstance: PHChange) {
+        guard let fetchedResult = allAssets,
+            let changeDetails = changeInstance.changeDetails(for: fetchedResult) else { return }
+        allAssets = changeDetails.fetchResultAfterChanges
+        reload(for: changeDetails)
+    }
+    
+    private func reload(for changeDetails: PHFetchResultChangeDetails<PHAsset>) {
+        DispatchQueue.main.async {
+            self.collectionView.performBatchUpdates({
+                if let removedIndexes = changeDetails.removedIndexes, !removedIndexes.isEmpty {
+                    let removedIndexPaths = removedIndexes.map { IndexPath(item: $0, section: 0) }
+                    self.collectionView.deleteItems(at: removedIndexPaths)
+                }
+                if let insertedIndexes = changeDetails.insertedIndexes, !insertedIndexes.isEmpty {
+                    let insertIndexPaths = insertedIndexes.map { IndexPath(item: $0, section: 0) }
+                    self.collectionView.insertItems(at: insertIndexPaths)
+                }
+                if let changedIndexes = changeDetails.changedIndexes, !changedIndexes.isEmpty {
+                    let changedIndexPaths = changedIndexes.map { IndexPath(item: $0, section: 0) }
+                    self.collectionView.reloadItems(at: changedIndexPaths)
+                }
+            }) { (finshed) in
+            }
+        }
     }
 }
