@@ -61,8 +61,8 @@ class SelectImageCollectionViewCell: UICollectionViewCell, AssetLoadable {
     }
     
     @discardableResult
-    func configure(with asset: PHAsset) -> Self {
-        load(asset)
+    func configure(with asset: PHAsset, completion: @escaping (UIImage?) -> Void) -> Self {
+        load(asset, completion: completion)
         return self
     }
 }

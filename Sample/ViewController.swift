@@ -144,8 +144,8 @@ extension ViewController: ImagePickerFieldDelegate {
 }
 
 extension ViewController: ImagePickerViewControllerDelegate {
-    func imagePickerViewController(_ imagePickerViewController: ImagePickerViewController, didSelectedImages images: [PickedImage]) {
-        userRegistrationForm.images = images.map { $0.image }
+    func imagePickerViewController(_ imagePickerViewController: ImagePickerViewController, didSelectedImages images: [UIImage]) {
+        userRegistrationForm.images = images
         imagePickerField?.set(images)
     }
 }

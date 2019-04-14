@@ -23,7 +23,7 @@ extension AssetLoadable where Self: UICollectionViewCell {
                       height: cellSize.height * scale)
     }
     
-    func load(_ asset: PHAsset) {
+    func load(_ asset: PHAsset, completion: @escaping (UIImage?) -> Void) {
         self.assetIdentifier = asset.localIdentifier
         let targetSize = thumbnailSize(for: self.bounds.size)
         imageManager.requestImage(
@@ -34,6 +34,7 @@ extension AssetLoadable where Self: UICollectionViewCell {
         ) { (image, _) in
             if self.assetIdentifier == asset.localIdentifier {
                 self.thumbnailImage = image
+                completion(image)
             }
         }
     }

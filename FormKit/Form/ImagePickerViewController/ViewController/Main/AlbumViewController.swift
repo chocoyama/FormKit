@@ -12,10 +12,10 @@ import Photos
 protocol AlbumViewControllerDelegate: class {
     func albumViewController(_ albumViewController: AlbumViewController,
                              didInsertedItemAt indexPath: IndexPath,
-                             selectedImages: [PickedImage])
+                             selectedImages: [UIImage])
     func albumViewController(_ albumViewController: AlbumViewController,
                              didRemovedItemAt indexPath: IndexPath,
-                             selectedImages: [PickedImage])
+                             selectedImages: [UIImage])
 }
 
 class AlbumViewController: UIViewController, Pageable {
@@ -34,11 +34,11 @@ class AlbumViewController: UIViewController, Pageable {
     
     private var allAssets: PHFetchResult<PHAsset>?
     private let maxSelectCount: Int
-    private var pickedImages = [PickedImage]()
+    private var pickedImages = [UIImage]()
     
     weak var delegate: AlbumViewControllerDelegate?
     
-    init(columnCount: Int, maxSelectCount: Int, pickedImages: [PickedImage]) {
+    init(columnCount: Int, maxSelectCount: Int, pickedImages: [UIImage]) {
         self.columnCount = columnCount
         self.maxSelectCount = maxSelectCount
         self.pickedImages = pickedImages
@@ -63,13 +63,17 @@ extension AlbumViewController: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let asset = allAssets?.object(at: indexPath.item) else { fatalError() }
-        let hasPicked = pickedImages.compactMap { $0.albumIndexPath }.contains(indexPath)
-        if hasPicked {
-            collectionView.selectItem(at: indexPath, animated: false, scrollPosition: [])
-        }
         return SelectImageCollectionViewCell
             .dequeue(from: collectionView, indexPath: indexPath)
-            .configure(with: asset)
+            .configure(with: asset, completion: { [weak self] image in
+                guard let self = self, let image = image else { return }
+                let hasPicked = self.pickedImages.contains(where: { $0.isEqualData(image) })
+                if hasPicked {
+                    self.collectionView.selectItem(at: indexPath, animated: false, scrollPosition: [])
+                } else {
+                    self.collectionView.deselectItem(at: indexPath, animated: false)
+                }
+            })
     }
     
 }
@@ -82,18 +86,16 @@ extension AlbumViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         guard let cell = collectionView.cellForItem(at: indexPath) as? SelectImageCollectionViewCell,
             let image = cell.imageView.image else { return }
-        append(pickedImage: PickedImage(image: image,
-                                        albumIndexPath: indexPath))
+        append(pickedImage: image)
     }
     
     func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
         guard let cell = collectionView.cellForItem(at: indexPath) as? SelectImageCollectionViewCell,
             let image = cell.imageView.image else { return }
-        remove(pickedImage: PickedImage(image: image,
-                                        albumIndexPath: indexPath))
+        remove(pickedImage: image)
     }
     
-    func append(pickedImage: PickedImage) {
+    func append(pickedImage: UIImage) {
         let insertIndexPath = IndexPath(item: pickedImages.count, section: 0)
         
         pickedImages.insert(pickedImage, at: insertIndexPath.item)
@@ -103,19 +105,26 @@ extension AlbumViewController: UICollectionViewDelegate {
                                       selectedImages: pickedImages)
     }
     
-    func remove(pickedImage: PickedImage) {
+    func remove(pickedImage: UIImage) {
         let removeIndexPaths = pickedImages
             .enumerated()
-            .filter { $0.element.albumIndexPath == pickedImage.albumIndexPath }
+            .filter { $0.element.isEqualData(pickedImage) }
             .map { IndexPath(item: $0.offset, section: 0) }
         
         guard let removeIndexPath = removeIndexPaths.first else { return }
         
-        pickedImages.removeAll { $0.albumIndexPath == pickedImage.albumIndexPath }
+        pickedImages.removeAll { $0.isEqualData(pickedImage) }
         
-        if let albumIndexPath = pickedImage.albumIndexPath,
-            collectionView.indexPathsForSelectedItems?.contains(albumIndexPath) == true {
-            collectionView.deselectItem(at: albumIndexPath, animated: true)
+        let indexPath = collectionView.indexPathsForVisibleItems
+            .enumerated()
+            .first(where: { (offset, element) -> Bool in
+                let cell = collectionView.cellForItem(at: element) as? SelectImageCollectionViewCell
+                let image = cell?.imageView.image
+                return image?.isEqualData(pickedImage) == true
+            })?
+            .element
+        if let indexPath = indexPath {
+            collectionView.deselectItem(at: indexPath, animated: true)
         }
         
         delegate?.albumViewController(self,
@@ -145,7 +154,14 @@ extension AlbumViewController: PHPhotoLibraryChangeObserver {
         guard let fetchedResult = allAssets,
             let changeDetails = changeInstance.changeDetails(for: fetchedResult) else { return }
         allAssets = changeDetails.fetchResultAfterChanges
-        reload(for: changeDetails)
+        reload()
+//        reload(for: changeDetails)
+    }
+    
+    private func reload() {
+        DispatchQueue.main.async {
+            self.collectionView.reloadData()
+        }
     }
     
     private func reload(for changeDetails: PHFetchResultChangeDetails<PHAsset>) {
@@ -166,5 +182,22 @@ extension AlbumViewController: PHPhotoLibraryChangeObserver {
             }) { (finshed) in
             }
         }
+    }
+}
+
+extension UIImage {
+    func isEqualData(_ image: UIImage) -> Bool {
+        if !image.size.equalTo(self.size) {
+            return false
+        }
+        
+        if let dataProvider1 = self.cgImage?.dataProvider,
+            let dataProvider2 = image.cgImage?.dataProvider {
+            if let data1 = dataProvider1.data,
+                let data2 = dataProvider2.data {
+                return data1 == data2
+            }
+        }
+        return false
     }
 }

@@ -9,13 +9,8 @@
 import UIKit
 import Photos
 
-public struct PickedImage: Equatable {
-    public let image: UIImage
-    let albumIndexPath: IndexPath?
-}
-
 public protocol ImagePickerViewControllerDelegate: class {
-    func imagePickerViewController(_ imagePickerViewController: ImagePickerViewController, didSelectedImages images: [PickedImage])
+    func imagePickerViewController(_ imagePickerViewController: ImagePickerViewController, didSelectedImages images: [UIImage])
 }
 
 public class ImagePickerViewController: UIViewController {
@@ -58,7 +53,7 @@ public class ImagePickerViewController: UIViewController {
     private let emptyVC = EmptyViewController()
     private let cameraActionVC = CameraActionViewController()
     
-    private var pickedImages = [PickedImage]()
+    private var pickedImages = [UIImage]()
     private var timer: Timer?
     private var canDelete = false {
         didSet {
@@ -72,7 +67,7 @@ public class ImagePickerViewController: UIViewController {
         return menuStackView.frame.width / CGFloat(Page.allCases.count)
     }
     
-    init(columnCount: Int, maxSelectCount: Int, pickedImages: [PickedImage]) {
+    init(columnCount: Int, maxSelectCount: Int, pickedImages: [UIImage]) {
         self.columnCount = columnCount
         self.maxSelectCount = maxSelectCount
         self.pickedImages = pickedImages
@@ -200,7 +195,7 @@ extension ImagePickerViewController {
         case .ended, .cancelled:
             selectedCollectionView.endInteractiveMovement()
             if canDelete {
-                timer = Timer.scheduledTimer(withTimeInterval: 3.0, repeats: false) { [weak self] (timer) in
+                timer = Timer.scheduledTimer(withTimeInterval: 4.0, repeats: false) { [weak self] (timer) in
                     self?.canDelete = false
                 }
             }
@@ -221,7 +216,7 @@ extension ImagePickerViewController: UICollectionViewDataSource {
     
     public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         if indexPath.item <= pickedImages.count - 1 {
-            let image = pickedImages[indexPath.item].image
+            let image = pickedImages[indexPath.item]
             return SelectedImageCollectionViewCell
                 .dequeue(from: collectionView, indexPath: indexPath)
                 .configure(with: image, canDelete: canDelete, delegate: self)
@@ -261,7 +256,7 @@ extension ImagePickerViewController: UICollectionViewDelegate {
     }
     
     public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        previewImageView.image = pickedImages[indexPath.item].image
+        previewImageView.image = pickedImages[indexPath.item]
         updatePreviewImageView(isHidden: false, animated: true)
     }
     
@@ -356,7 +351,7 @@ extension ImagePickerViewController: SelectedImageCollectionViewCellDelegate {
                                          didTappedDeleteButton button: UIButton,
                                          with image: UIImage?) {
         guard let image = image,
-            let pickedImage = pickedImages.first(where: { $0.image == image }) else { return }
+            let pickedImage = pickedImages.first(where: { $0 == image }) else { return }
         albumVC.remove(pickedImage: pickedImage)
     }
 }
@@ -364,12 +359,12 @@ extension ImagePickerViewController: SelectedImageCollectionViewCellDelegate {
 // MARK: AlbumViewController
 
 extension ImagePickerViewController: AlbumViewControllerDelegate {
-    func albumViewController(_ albumViewController: AlbumViewController, didInsertedItemAt indexPath: IndexPath, selectedImages: [PickedImage]) {
+    func albumViewController(_ albumViewController: AlbumViewController, didInsertedItemAt indexPath: IndexPath, selectedImages: [UIImage]) {
         self.pickedImages = selectedImages
         insertImage(at: indexPath)
     }
     
-    func albumViewController(_ albumViewController: AlbumViewController, didRemovedItemAt indexPath: IndexPath, selectedImages: [PickedImage]) {
+    func albumViewController(_ albumViewController: AlbumViewController, didRemovedItemAt indexPath: IndexPath, selectedImages: [UIImage]) {
         self.pickedImages = selectedImages
         deleteImage(at: indexPath)
     }
@@ -381,7 +376,7 @@ extension ImagePickerViewController: AlbumViewControllerDelegate {
             duration: 0.3,
             options: .transitionCrossDissolve,
             animations: {
-                let image = self.pickedImages[indexPath.item].image
+                let image = self.pickedImages[indexPath.item]
                 cell.configure(with: image, canDelete: self.canDelete, delegate: self)
             },
             completion: { (finished) in
@@ -429,8 +424,8 @@ extension ImagePickerViewController: AlbumViewControllerDelegate {
 
 extension ImagePickerViewController: CameraViewControllerDelegate {
     func cameraViewController(_ cameraViewController: CameraViewController, didCapturedImage image: UIImage) {
-        albumVC.append(pickedImage: PickedImage(image: image,
-                                                albumIndexPath: nil))
+//        albumVC.append(pickedImage: PickedImage(image: image,
+//                                                albumIndexPath: nil))
     }
 }
 
