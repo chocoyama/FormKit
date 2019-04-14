@@ -155,7 +155,6 @@ extension AlbumViewController: PHPhotoLibraryChangeObserver {
             let changeDetails = changeInstance.changeDetails(for: fetchedResult) else { return }
         allAssets = changeDetails.fetchResultAfterChanges
         reload()
-//        reload(for: changeDetails)
     }
     
     private func reload() {

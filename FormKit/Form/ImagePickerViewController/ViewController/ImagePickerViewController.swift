@@ -424,8 +424,7 @@ extension ImagePickerViewController: AlbumViewControllerDelegate {
 
 extension ImagePickerViewController: CameraViewControllerDelegate {
     func cameraViewController(_ cameraViewController: CameraViewController, didCapturedImage image: UIImage) {
-//        albumVC.append(pickedImage: PickedImage(image: image,
-//                                                albumIndexPath: nil))
+        albumVC.append(pickedImage: image)
     }
 }
 
